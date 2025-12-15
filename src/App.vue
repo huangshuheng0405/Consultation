@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Button } from 'vant'
-import { useUserStore } from '@/stores/user.js'
+import { useUserStore } from '@/stores/modules/user.js'
 
 const userStore = useUserStore()
 </script>
