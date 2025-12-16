@@ -1,10 +1,8 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="app">
-    <router-link to="/login">login</router-link>
-    <router-view></router-view>
-  </div>
+  <router-link to="/login">login</router-link>
+  <router-view></router-view>
 </template>
 
 <style scoped></style>
