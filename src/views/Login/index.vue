@@ -4,7 +4,11 @@ import { passwordRules } from '@/utils/rules'
 import { useRoute, useRouter } from 'vue-router'
 import { onUnmounted, ref } from 'vue'
 import { FormInstance, showSuccessToast, showToast } from 'vant'
-import { loginByPasswordAPI, sendMobileCodeAPI } from '@/services/user.js'
+import {
+  loginByMobileAPI,
+  loginByPasswordAPI,
+  sendMobileCodeAPI
+} from '@/services/user.js'
 import { useUserStore } from '@/stores'
 
 const router = useRouter()
@@ -26,9 +30,15 @@ const onSubmit = async () => {
   if (!agree.value) {
     return showToast('请勾选协议')
   }
-  const res = await loginByPasswordAPI(mobile.value, password.value)
+  // 判断是短信还是密码登录
+  if (isPassword.value) {
+    const res = await loginByPasswordAPI(mobile.value, password.value)
+    userStore.setUser(res.data) // 登录成功，保存用户信息
+  } else {
+    const res = await loginByMobileAPI(mobile.value, code.value)
+    userStore.setUser(res.data)
+  }
   // console.log(res)
-  userStore.setUser(res.data) // 登录成功，保存用户信息
   showSuccessToast('登录成功')
   router.replace((route.query.redirect as string) || '/user')
 }
