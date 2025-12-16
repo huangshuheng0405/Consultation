@@ -1,6 +1,6 @@
 import router from '@/router/index.js'
 import { useUserStore } from '@/stores/index.js'
-import axios, { AxiosError } from 'axios'
+import axios, { AxiosError, Method } from 'axios'
 import { showToast } from 'vant'
 
 const instance = axios.create({
@@ -51,3 +51,11 @@ instance.interceptors.response.use(
 )
 
 export default instance
+
+export const request = (url: string, method: Method = 'get', submitData?: object) => {
+  return instance({
+    url,
+    method,
+    [method.toUpperCase() === 'GET' ? 'params' : 'data']: submitData
+  })
+}
