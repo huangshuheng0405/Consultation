@@ -1,6 +1,14 @@
 import { useUserStore } from '@/stores/index.js'
 import { createRouter, createWebHistory } from 'vue-router'
 
+// 进度条
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+
+NProgress.configure({
+  showSpinner: false // 是否显示加载 spinner 效果，默认为 true
+})
+
 // vite.config.ts 中配置了 BASE_URL
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -52,7 +60,7 @@ const router = createRouter({
 
 // 全局前置守卫
 router.beforeEach((to) => {
-  // 判断用户是否登录，如果未登录且不是在登录页面，则跳转到登录页面
+  NProgress.start() // 开启进度条
   const userStore = useUserStore()
   // 白名单，不需要登录即可访问的页面
   const whiteList = ['/login']
@@ -65,6 +73,7 @@ router.beforeEach((to) => {
 // 全局后置导航
 router.afterEach((to) => {
   document.title = `${to.meta.title || ''}-优医问诊`
+  NProgress.done()
 })
 
 export default router
