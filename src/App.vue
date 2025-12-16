@@ -1,8 +1,16 @@
 <script setup lang="ts">
 import { Button } from 'vant'
 import { useUserStore } from '@/stores/modules/user.js'
+import axios from './utils/request.js'
 
 const userStore = useUserStore()
+
+const getUserInfo = async () => {
+  axios.request({
+    url: '/patient/myUser',
+    method: 'get'
+  })
+}
 </script>
 
 <template>
@@ -22,6 +30,8 @@ const userStore = useUserStore()
     >登录</Button
   >
   <Button type="primary" @click="userStore.removeUser()">退出</Button>
+
+  <Button @click="getUserInfo">获取用户信息</Button>
 </template>
 
 <style scoped lang="scss">
