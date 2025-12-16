@@ -6,6 +6,8 @@ import router from './router/index.js'
 import 'vant/lib/index.css'
 import './styles/main.scss'
 
+import 'virtual:svg-icons-register'
+
 const app = createApp(App)
 
 app.use(pinia)
