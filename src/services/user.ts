@@ -1,5 +1,5 @@
 import { request } from '@/utils/request.js'
-import { CodeType, User } from '@/types/user.js'
+import { CodeType, User, UserInfo } from '@/types/user.js'
 
 /** 密码登录
  * @param mobile 手机号
@@ -25,4 +25,12 @@ export const sendMobileCodeAPI = (mobile: string, type: CodeType) => {
  * */
 export const loginByMobileAPI = (mobile: string, code: string) => {
   return request<User>('/login', 'post', { mobile, code })
+}
+
+/**
+ * 获取用户信息
+ * @returns {code: number, msg: string, data: User}
+ */
+export const getUserInfoAPI = () => {
+  return request<UserInfo>('/patient/myUser', 'GET')
 }
