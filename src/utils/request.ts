@@ -4,14 +4,14 @@ import axios, { AxiosError, Method } from 'axios'
 import { showToast } from 'vant'
 
 const instance = axios.create({
-  // TODO 1. 基础地址，超时时间
+  //  1. 基础地址，超时时间
   baseURL: 'https://consult-api.itheima.net',
   timeout: 10000
 })
 
 instance.interceptors.request.use(
   (config) => {
-    // TODO 2. 携带token
+    //  2. 携带token
     const userStore = useUserStore()
     if (userStore.user?.token) {
       config.headers.Authorization = `Bearer ${userStore.user.token}`
@@ -23,16 +23,16 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (res) => {
-    // TODO 3. 处理业务失败
+    //  3. 处理业务失败
     if (res.data.code !== 10000) {
       showToast(res.data.message || '业务失败')
       return Promise.reject(res.data)
     }
-    // TODO 4. 摘取核心响应数据
+    //  4. 摘取核心响应数据
     return res.data
   },
   (err: AxiosError) => {
-    // TODO 5. 处理401错误
+    //  5. 处理401错误
     if (err.response?.status === 401) {
       showToast('登录过期，请重新登录')
       // 清空用户信息
@@ -58,7 +58,11 @@ type Data<T> = {
   data: T
 }
 
-export const request = <T>(url: string, method: Method = 'get', submitData?: object) => {
+export const request = <T>(
+  url: string,
+  method: Method = 'get',
+  submitData?: object
+) => {
   return instance.request<never, Data<T>>({
     url,
     method,
