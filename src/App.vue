@@ -11,6 +11,24 @@ const getUserInfo = async () => {
     method: 'get'
   })
 }
+
+const login = async () => {
+  axios
+    .request({
+      url: '/login/password',
+      method: 'post',
+      data: {
+        mobile: '17850967571',
+        password: '123456'
+      }
+    })
+    .then((res) => {
+      console.log('登录成功', res)
+    })
+    .catch((err) => {
+      console.log('登录失败', err)
+    })
+}
 </script>
 
 <template>
@@ -32,6 +50,7 @@ const getUserInfo = async () => {
   <Button type="primary" @click="userStore.removeUser()">退出</Button>
 
   <Button @click="getUserInfo">获取用户信息</Button>
+  <Button @click="login">接口登录</Button>
 </template>
 
 <style scoped lang="scss">
