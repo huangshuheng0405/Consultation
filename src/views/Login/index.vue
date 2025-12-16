@@ -1,16 +1,8 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="login">
-    <h1>登录</h1>
-  </div>
+  <h1>登录</h1>
+  <van-button type="success">登录</van-button>
 </template>
 
-<style scoped lang="scss">
-.login {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-</style>
+<style scoped lang="scss"></style>
