@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { useRouter } from 'vue-router'
+
 // 通过defineProps 获取父组件传递的参数 实现标题和右侧文字的设置
 defineProps<{
   title?: string
@@ -12,6 +14,16 @@ const emit = defineEmits<{
 const onClickRight = () => {
   emit('click-right')
 }
+
+const router = useRouter()
+// 回退到上一页 如果没有上一页 则跳转到首页
+const onClickLeft = () => {
+  if (history.state?.back) {
+    router.back()
+  } else {
+    router.push('/')
+  }
+}
 </script>
 
 <template>
@@ -21,6 +33,7 @@ const onClickRight = () => {
       left-arrow
       :title="title"
       :right-text="rightText"
+      @click-left="onClickLeft"
       @click-right="onClickRight"
     ></van-nav-bar>
   </div>
