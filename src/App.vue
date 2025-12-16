@@ -2,6 +2,7 @@
 import { Button } from 'vant'
 import { useUserStore } from '@/stores/modules/user.js'
 import { request } from './utils/request.js'
+import { User } from './types/user.js'
 
 const userStore = useUserStore()
 
@@ -24,12 +25,12 @@ const login = async () => {
   //       password: '123456'
   //     }
   //   })
-  request('/login/password', 'post', {
+  request<User>('/login/password', 'post', {
     mobile: '17850967571',
     password: '123456'
   })
     .then((res) => {
-      console.log('登录成功', res)
+      console.log('登录成功', res.data)
     })
     .catch((err) => {
       console.log('登录失败', err)
