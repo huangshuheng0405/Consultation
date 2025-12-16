@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { mobileRules } from '@/utils/rules'
 import { passwordRules } from '@/utils/rules'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { ref } from 'vue'
-import { showToast } from 'vant'
+import { showSuccessToast, showToast } from 'vant'
+import { loginByPasswordAPI } from '@/services/user.js'
+import { useUserStore } from '@/stores'
 
 const router = useRouter()
 
@@ -15,12 +17,20 @@ const mobile = ref('')
 const password = ref('')
 const agree = ref(false)
 
-const onSubmit = () => {
+const userStore = useUserStore()
+
+const route = useRoute()
+
+const onSubmit = async () => {
   // console.log(mobile.value, password.value)
   if (!agree.value) {
     return showToast('请勾选协议')
   }
-  // todo 登录
+  const res = await loginByPasswordAPI(mobile.value, password.value)
+  // console.log(res)
+  userStore.setUser(res.data) // 登录成功，保存用户信息
+  showSuccessToast('登录成功')
+  router.replace((route.query.redirect as string) || '/user')
 }
 </script>
 
