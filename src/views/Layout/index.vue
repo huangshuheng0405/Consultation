@@ -12,8 +12,8 @@
           </cp-icon>
         </template>
       </van-tabbar-item>
-      <van-tabbar-item to="/article"
-        >健康百科
+      <van-tabbar-item to="/article">
+        健康百科
         <template #icon="{ active }">
           <cp-icon :name="`home-article-${active ? 'active' : 'default'}`">
           </cp-icon>

@@ -1,3 +1,4 @@
+import { useUserStore } from '@/stores/index.js'
 import { createRouter, createWebHistory } from 'vue-router'
 
 // vite.config.ts 中配置了 BASE_URL
@@ -34,4 +35,15 @@ const router = createRouter({
   ]
 })
 
+// 全局前置守卫
+router.beforeEach((to) => {
+  // 判断用户是否登录，如果未登录且不是在登录页面，则跳转到登录页面
+  const userStore = useUserStore()
+  // 白名单，不需要登录即可访问的页面
+  const whiteList = ['/login']
+  // 如果未登录且不在白名单中，则跳转到登录页面
+  if (!userStore.user?.token && !whiteList.includes(to.path)) {
+    return '/login'
+  }
+})
 export default router
