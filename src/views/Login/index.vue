@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { mobileRules } from '@/utils/rules'
+import { codeRules, mobileRules } from '@/utils/rules'
 import { passwordRules } from '@/utils/rules'
 import { useRoute, useRouter } from 'vue-router'
 import { ref } from 'vue'
@@ -20,7 +20,7 @@ const agree = ref(false)
 const userStore = useUserStore()
 
 const route = useRoute()
-
+// 提交表单
 const onSubmit = async () => {
   // console.log(mobile.value, password.value)
   if (!agree.value) {
@@ -32,6 +32,10 @@ const onSubmit = async () => {
   showSuccessToast('登录成功')
   router.replace((route.query.redirect as string) || '/user')
 }
+
+// 短信登录界面切换
+const isPassword = ref(true) // 默认密码登录模式，如果为false则切换为短信登录模式，如果为true则切换为密码登录模式
+const code = ref('')
 </script>
 
 <template>
@@ -39,9 +43,11 @@ const onSubmit = async () => {
     <cp-nav-bar right-text="注册" @click-right="onClickRight"></cp-nav-bar>
     <!-- 头部 -->
     <div class="login-head">
-      <h3>密码登录</h3>
+      <h3>{{ isPassword ? '密码登录' : '短信登录' }}</h3>
       <a href="javascript:;">
-        <span>短信验证码登录</span>
+        <span @click="isPassword = !isPassword">{{
+          isPassword ? '短信验证码登录' : '密码登录'
+        }}</span>
         <van-icon name="arrow"></van-icon>
       </a>
     </div>
@@ -54,11 +60,22 @@ const onSubmit = async () => {
         type="tel"
       ></van-field>
       <van-field
+        v-if="isPassword"
         v-model="password"
         :rules="passwordRules"
         placeholder="请输入密码"
         type="password"
       ></van-field>
+      <van-field
+        v-else
+        placeholder="短信验证码"
+        :rules="codeRules"
+        v-model="code"
+      >
+        <template #button>
+          <span class="btn-send">获取验证码</span>
+        </template>
+      </van-field>
       <div class="cp-cell">
         <van-checkbox v-model="agree">
           <span>我已同意</span>
