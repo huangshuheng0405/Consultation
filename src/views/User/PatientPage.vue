@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // 组件挂载完毕 获取数据
-import { onMounted, ref } from 'vue'
-import { PatientList } from '@/types/user.js'
+import { computed, onMounted, ref } from 'vue'
+import { Patient, PatientList } from '@/types/user.d.js'
 import { getPatientListAPI } from '@/services/user.js'
 
 const patientInfoList = ref<PatientList>()
@@ -32,10 +32,29 @@ const options = [
 ]
 // 控制弹出层是否显示
 const show = ref(false)
-
+// 弹出层
 const onShowPopup = () => {
+  // 打开时重置表单数据
+  patient.value = { ...initPatient }
   show.value = true
 }
+
+// 初始值表单数据
+const initPatient: Patient = {
+  name: '',
+  idCard: '',
+  gender: 1,
+  defaultFlag: 0
+}
+// 收集表单数据
+const patient = ref<Patient>({ ...initPatient })
+
+const defaultFlag = computed({
+  get: () => (patient.value.defaultFlag === 1 ? true : false),
+  set: (value) => {
+    patient.value.defaultFlag = value ? 1 : 0
+  }
+})
 </script>
 
 <template>
@@ -45,9 +64,9 @@ const onShowPopup = () => {
       <div class="patient-item" v-for="item in patientInfoList" :key="item.id">
         <div class="info">
           <span class="name">{{ item.name }}</span>
-          <span class="id">{{
-            item.idCard.replace(/^(.{6}).+(.{4})$/, '$1********$2')
-          }}</span>
+          <span class="id">
+            {{ item.idCard.replace(/^(.{6}).+(.{4})$/, '$1********$2') }}</span
+          >
           <span>{{ item.genderValue }}</span>
           <span>{{ item.age }}</span>
         </div>
@@ -65,7 +84,7 @@ const onShowPopup = () => {
       <div class="patient-tip">最多可添加 6 人</div>
     </div>
     <!--  popup  -->
-    <van-popup position="right" v-model:show="show">
+    <van-popup position="right" :show="show">
       <cp-nav-bar
         title="添加患者"
         right-text="保存"
@@ -73,17 +92,28 @@ const onShowPopup = () => {
       >
       </cp-nav-bar>
       <van-form autocomplete="off" ref="form">
-        <van-field label="真实姓名" placeholder="请输入真实姓名" />
-        <van-field label="身份证号" placeholder="请输入身份证号" />
+        <van-field
+          v-model="patient.name"
+          label="真实姓名"
+          placeholder="请输入真实姓名"
+        />
+        <van-field
+          v-model="patient.idCard"
+          label="身份证号"
+          placeholder="请输入身份证号"
+        />
         <van-field label="性别" class="pb4">
           <!-- 单选按钮组件 -->
           <template #input>
-            <cp-radio-btn :options="options"></cp-radio-btn>
+            <cp-radio-btn
+              v-model="patient.gender"
+              :options="options"
+            ></cp-radio-btn>
           </template>
         </van-field>
         <van-field label="默认就诊人">
           <template #input>
-            <van-checkbox :icon-size="18" round />
+            <van-checkbox v-model="defaultFlag" :icon-size="18" round />
           </template>
         </van-field>
       </van-form>
