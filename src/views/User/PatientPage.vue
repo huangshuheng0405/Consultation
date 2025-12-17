@@ -2,7 +2,7 @@
 // 组件挂载完毕 获取数据
 import { onMounted, ref } from 'vue'
 import { PatientList } from '@/types/user.js'
-import { addPatientAPI, getPatientListAPI } from '@/services/user.js'
+import { getPatientListAPI } from '@/services/user.js'
 
 const patientInfoList = ref<PatientList>()
 
@@ -17,20 +17,25 @@ onMounted(() => {
 })
 
 // 添加患者信息
-const onAddPatient = async () => {
-  await addPatientAPI({
-    name: '张三',
-    defaultFlag: 1,
-    gender: 1,
-    idCard: '511725200504058138'
-  })
-}
+// const onAddPatient = async () => {
+//   await addPatientAPI({
+//     name: '张三',
+//     defaultFlag: 1,
+//     gender: 1,
+//     idCard: '511725200504058138'
+//   })
+// }
 
 const options = [
   { label: '男', value: 1 },
   { label: '女', value: 0 }
 ]
-const gender = ref(1)
+// 控制弹出层是否显示
+const show = ref(false)
+
+const onShowPopup = () => {
+  show.value = true
+}
 </script>
 
 <template>
@@ -52,26 +57,53 @@ const gender = ref(1)
       <div
         class="patient-add"
         v-if="patientInfoList && patientInfoList.length < 6"
-        @click="onAddPatient"
+        @click="onShowPopup"
       >
         <cp-icon name="user-add" />
         <p>添加患者</p>
       </div>
       <div class="patient-tip">最多可添加 6 人</div>
-      <!--   测试   -->
-      <!--      <cp-radio-btn-->
-      <!--        :model-value="count"-->
-      <!--        @update:model-value="count = $event"-->
-      <!--      ></cp-radio-btn>-->
-      <cp-radio-btn :options="options" v-model="gender"></cp-radio-btn>
     </div>
+    <!--  popup  -->
+    <van-popup position="right" v-model:show="show">
+      <cp-nav-bar
+        title="添加患者"
+        right-text="保存"
+        :back="() => (show = false)"
+      >
+      </cp-nav-bar>
+      <van-form autocomplete="off" ref="form">
+        <van-field label="真实姓名" placeholder="请输入真实姓名" />
+        <van-field label="身份证号" placeholder="请输入身份证号" />
+        <van-field label="性别" class="pb4">
+          <!-- 单选按钮组件 -->
+          <template #input>
+            <cp-radio-btn :options="options"></cp-radio-btn>
+          </template>
+        </van-field>
+        <van-field label="默认就诊人">
+          <template #input>
+            <van-checkbox :icon-size="18" round />
+          </template>
+        </van-field>
+      </van-form>
+    </van-popup>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .patient-page {
   padding: 46px 0 80px;
+  :deep() {
+    .van-popup {
+      width: 100%;
+      height: 100%;
+      padding-top: 46px;
+      box-sizing: border-box;
+    }
+  }
 }
+
 .patient-list {
   padding: 15px;
 }

@@ -2,9 +2,10 @@
 import { useRouter } from 'vue-router'
 
 // 通过defineProps 获取父组件传递的参数 实现标题和右侧文字的设置
-defineProps<{
+const props = defineProps<{
   title?: string
   rightText?: string
+  back?: () => void
 }>()
 
 const emit = defineEmits<{
@@ -18,6 +19,9 @@ const onClickRight = () => {
 const router = useRouter()
 // 回退到上一页 如果没有上一页 则跳转到首页
 const onClickLeft = () => {
+  if (props.back) {
+    return props.back()
+  }
   if (history.state?.back) {
     router.back()
   } else {
