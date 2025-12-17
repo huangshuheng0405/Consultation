@@ -1,29 +1,29 @@
 <script setup lang="ts">
-// defineProps<{
-//   options: {
-//     label: string
-//     value: string | number
-//   }[]
-// }>()
 defineProps<{
-  count: number
+  options: {
+    label: string
+    value: number | string
+  }[]
+  modelValue: number | string
 }>()
 
-defineEmits<{ (e: 'update:count', count: number): void }>()
+defineEmits<{
+  (e: 'update:modelValue', value: number | string): void
+}>()
 </script>
 
 <template>
   <div class="cp-radio-btn">
-    <!--    <a-->
-    <!--      class="item"-->
-    <!--      href="javascript:;"-->
-    <!--      v-for="item in options"-->
-    <!--      :key="item.value"-->
-    <!--    >-->
-    <!--      {{ item.label }}-->
-    <!--    </a>-->
-    计数器{{ count }}
-    <button @click="$emit('update:count', count + 1)">+1</button>
+    <a
+      class="item"
+      href="javascript:;"
+      v-for="opt in options"
+      :key="opt.value"
+      :class="{ active: opt.value === modelValue }"
+      @click="$emit('update:modelValue', opt.value)"
+    >
+      {{ opt.label }}
+    </a>
   </div>
 </template>
 
