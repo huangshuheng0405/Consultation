@@ -3,6 +3,8 @@
 import { computed, onMounted, ref } from 'vue'
 import { Patient, PatientList } from '@/types/user.d.js'
 import { getPatientListAPI } from '@/services/user.js'
+import { idCardRules, nameRules } from '@/utils/rules.js'
+import { FormInstance, showConfirmDialog } from 'vant'
 
 const patientInfoList = ref<PatientList>()
 
@@ -49,12 +51,31 @@ const initPatient: Patient = {
 // 收集表单数据
 const patient = ref<Patient>({ ...initPatient })
 
+// 复选框绑定  不能直接用数字
 const defaultFlag = computed({
   get: () => (patient.value.defaultFlag === 1 ? true : false),
   set: (value) => {
     patient.value.defaultFlag = value ? 1 : 0
   }
 })
+
+// 提交表单
+const form = ref<FormInstance>()
+const onSubmit = async () => {
+  // 表单整体校验
+  await form.value?.validate()
+  // 性别校验
+  // 取出身份证倒数第二位
+  const gender = +patient.value.idCard.substr(-2, 1) % 2
+  // console.log(gender)
+  if (gender !== patient.value.gender) {
+    await showConfirmDialog({
+      title: '温馨提示',
+      message: '填写的性别与身份证上的不一样\n您确认提交码',
+      confirmButtonText: '确定'
+    })
+  }
+}
 </script>
 
 <template>
@@ -89,18 +110,22 @@ const defaultFlag = computed({
         title="添加患者"
         right-text="保存"
         :back="() => (show = false)"
+        @click-right="onSubmit"
       >
       </cp-nav-bar>
+      <!--  表单  -->
       <van-form autocomplete="off" ref="form">
         <van-field
           v-model="patient.name"
           label="真实姓名"
           placeholder="请输入真实姓名"
+          :rules="nameRules"
         />
         <van-field
           v-model="patient.idCard"
           label="身份证号"
           placeholder="请输入身份证号"
+          :rules="idCardRules"
         />
         <van-field label="性别" class="pb4">
           <!-- 单选按钮组件 -->
