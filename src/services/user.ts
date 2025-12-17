@@ -1,5 +1,5 @@
 import { request } from '@/utils/request.js'
-import { CodeType, User, UserInfo } from '@/types/user.js'
+import { CodeType, PatientList, User, UserInfo } from '@/types/user.js'
 
 /** 密码登录
  * @param mobile 手机号
@@ -33,4 +33,15 @@ export const loginByMobileAPI = (mobile: string, code: string) => {
  */
 export const getUserInfoAPI = () => {
   return request<UserInfo>('/patient/myUser', 'GET')
+}
+
+/** 获取患者列表信息
+ * @returns 患者列表信息
+ * */
+export const getPatientListAPI = () => {
+  return request<PatientList>('/patient/mylist')
+}
+
+export const addPatientAPI = (patient: object | undefined) => {
+  return request('/patient/add', 'POST', patient)
 }
