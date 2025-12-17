@@ -1,5 +1,5 @@
 import { request } from '@/utils/request.js'
-import { CodeType, PatientList, User, UserInfo } from '@/types/user.js'
+import { CodeType, Patient, PatientList, User, UserInfo } from '@/types/user.js'
 
 /** 密码登录
  * @param mobile 手机号
@@ -41,7 +41,10 @@ export const getUserInfoAPI = () => {
 export const getPatientListAPI = () => {
   return request<PatientList>('/patient/mylist')
 }
-
-export const addPatientAPI = (patient: object | undefined) => {
+/** 添加患者
+ *
+ * @param patient
+ */
+export const addPatientAPI = (patient: Patient) => {
   return request('/patient/add', 'POST', patient)
 }

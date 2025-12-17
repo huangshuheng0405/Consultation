@@ -2,38 +2,33 @@
 // 组件挂载完毕 获取数据
 import { computed, onMounted, ref } from 'vue'
 import { Patient, PatientList } from '@/types/user.d.js'
-import { getPatientListAPI } from '@/services/user.js'
+import { addPatientAPI, getPatientListAPI } from '@/services/user.js'
 import { idCardRules, nameRules } from '@/utils/rules.js'
-import { FormInstance, showConfirmDialog } from 'vant'
+import { FormInstance, showConfirmDialog, showSuccessToast } from 'vant'
 
 const patientInfoList = ref<PatientList>()
 
+// 获取患者列表
 const getPatientInfoList = async () => {
   const res = await getPatientListAPI()
   console.log(res)
   patientInfoList.value = res.data
 }
 
+// 组件挂在完毕时执行
 onMounted(() => {
   getPatientInfoList()
 })
 
-// 添加患者信息
-// const onAddPatient = async () => {
-//   await addPatientAPI({
-//     name: '张三',
-//     defaultFlag: 1,
-//     gender: 1,
-//     idCard: '511725200504058138'
-//   })
-// }
-
+// 表单性别
 const options = [
   { label: '男', value: 1 },
   { label: '女', value: 0 }
 ]
+
 // 控制弹出层是否显示
 const show = ref(false)
+
 // 弹出层
 const onShowPopup = () => {
   // 打开时重置表单数据
@@ -48,6 +43,7 @@ const initPatient: Patient = {
   gender: 1,
   defaultFlag: 0
 }
+
 // 收集表单数据
 const patient = ref<Patient>({ ...initPatient })
 
@@ -75,6 +71,12 @@ const onSubmit = async () => {
       confirmButtonText: '确定'
     })
   }
+  // 提交表单
+  await addPatientAPI(patient.value)
+  // 关闭弹出层 加载列表 成功提示
+  show.value = false
+  getPatientInfoList()
+  showSuccessToast('添加成功')
 }
 </script>
 
