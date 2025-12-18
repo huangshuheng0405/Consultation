@@ -42,9 +42,15 @@ export const getPatientListAPI = () => {
   return request<PatientList>('/patient/mylist')
 }
 /** 添加患者
- *
- * @param patient
+ * @param patient 患者信息
  */
 export const addPatientAPI = (patient: Patient) => {
   return request('/patient/add', 'POST', patient)
+}
+
+/** 编辑患者信息
+ * @param patient 患者信息
+ */
+export const editPatientAPI = (patient: Patient) => {
+  return request('/patient/update', 'put', patient)
 }
