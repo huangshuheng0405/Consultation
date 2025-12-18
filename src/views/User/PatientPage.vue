@@ -4,6 +4,7 @@ import { computed, onMounted, ref } from 'vue'
 import { Patient, PatientList } from '@/types/user.d.js'
 import {
   addPatientAPI,
+  deletePatientAPI,
   editPatientAPI,
   getPatientListAPI
 } from '@/services/user.js'
@@ -96,6 +97,18 @@ const onSubmit = async () => {
   getPatientInfoList()
   showSuccessToast(patient.value.id ? '编辑成功' : '添加成功')
 }
+
+// 删除患者
+const onRemove = async () => {
+  await showConfirmDialog({
+    title: '温馨提示',
+    message: `您确认删除 ${patient.value.name} 患者的信息吗?`
+  })
+  await deletePatientAPI(patient.value.id!)
+  show.value = false
+  getPatientInfoList()
+  showSuccessToast('删除成功')
+}
 </script>
 
 <template>
@@ -164,11 +177,25 @@ const onSubmit = async () => {
           </template>
         </van-field>
       </van-form>
+      <!--   删除按钮   -->
+      <van-action-bar v-if="patient.id">
+        <van-action-bar-button text="删除" @click="onRemove" />
+      </van-action-bar>
     </van-popup>
   </div>
 </template>
 
 <style lang="scss" scoped>
+//底部操作栏
+.van-action-bar {
+  padding: 0 10px;
+  margin-bottom: 10px;
+  .van-button {
+    color: var(--cp-price);
+    background-color: var(--cp-bg);
+  }
+}
+
 .patient-page {
   padding: 46px 0 80px;
   :deep() {
