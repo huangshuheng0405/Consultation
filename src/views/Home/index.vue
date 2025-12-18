@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import KnowledgeList from '@/views/Home/components/KnowledgeList.vue'
 
 // 默认选中第二个tab
 const active = ref(1)
@@ -80,12 +81,18 @@ const active = ref(1)
       </van-swipe>
       <!--   tab   -->
       <van-tabs shrink sticky v-model:active="active">
-        <van-tab title="关注">1</van-tab>
-        <van-tab title="推荐">
-          <p v-for="i in 100" :key="i">1111</p>
+        <van-tab title="关注">
+          <knowledge-list></knowledge-list>
         </van-tab>
-        <van-tab title="减脂">3</van-tab>
-        <van-tab title="饮食">4</van-tab>
+        <van-tab title="推荐">
+          <knowledge-list></knowledge-list>
+        </van-tab>
+        <van-tab title="减脂">
+          <knowledge-list></knowledge-list>
+        </van-tab>
+        <van-tab title="饮食">
+          <knowledge-list></knowledge-list>
+        </van-tab>
       </van-tabs>
     </div>
   </div>
