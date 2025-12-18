@@ -1,9 +1,22 @@
 <script setup lang="ts">
 import DoctorCard from '@/views/Home/components/DoctorCard.vue'
 import { useWindowSize } from '@vueuse/core'
+import { DoctorList } from '@/types/consult.js'
+import { onMounted, ref } from 'vue'
+import { getDoctorListAPI } from '@/services/consult.js'
 
 // 获取当前屏幕宽度
 const { width } = useWindowSize()
+
+const doctorList = ref<DoctorList>([])
+const getDoctorList = async () => {
+  const res = await getDoctorListAPI({ pageSize: 5, current: 1 })
+  doctorList.value = res.data.rows
+}
+
+onMounted(() => {
+  getDoctorList()
+})
 </script>
 
 <template>
@@ -19,8 +32,8 @@ const { width } = useWindowSize()
         :show-indicators="false"
         :loop="false"
       >
-        <van-swipe-item v-for="i in 5" :key="i">
-          <doctor-card></doctor-card>
+        <van-swipe-item v-for="doctor in doctorList" :key="doctor.id">
+          <doctor-card :doctor="doctor"></doctor-card>
         </van-swipe-item>
       </van-swipe>
     </div>
