@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import KnowledgeList from '@/views/Home/components/KnowledgeList.vue'
+import FollowDoctor from '@/views/Home/components/FollowDoctor.vue'
 
 // 默认选中第二个tab
 const active = ref(1)
@@ -82,6 +83,7 @@ const active = ref(1)
       <!--   tab   -->
       <van-tabs shrink sticky v-model:active="active">
         <van-tab title="关注">
+          <follow-doctor></follow-doctor>
           <knowledge-list type="like"></knowledge-list>
         </van-tab>
         <van-tab title="推荐">
