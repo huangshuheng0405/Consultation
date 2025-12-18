@@ -1,5 +1,6 @@
 import {
   DoctorPage,
+  FollowType,
   KnowledgePage,
   KnowledgeParams,
   PageParams
@@ -19,4 +20,12 @@ export const getKnowledgePageListAPI = (params: KnowledgeParams) => {
  * */
 export const getDoctorListAPI = (params: PageParams) => {
   return request<DoctorPage>('/home/page/doc', 'get', params)
+}
+
+/** 关注或取消关注
+ * @param id 关注对象id
+ * @param type topic百科话题,knowledge百科文章,doc医生,disease疾病
+ * */
+export const followOrUnfollowAPI = (id: string, type: FollowType = 'doc') => {
+  return request('like', 'POST', { id, type })
 }

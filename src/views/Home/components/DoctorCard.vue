@@ -1,9 +1,23 @@
 <script lang="ts" setup>
 import { Doctor } from '@/types/consult.js'
+import { ref } from 'vue'
+import { followOrUnfollowAPI } from '@/services/consult.js'
 
 defineProps<{
   doctor: Doctor
 }>()
+
+const loading = ref(false)
+
+const followDoctor = async (doctor: Doctor) => {
+  loading.value = true
+  try {
+    await followOrUnfollowAPI(doctor.id, 'doc')
+    doctor.likeFlag = doctor.likeFlag === 1 ? 0 : 1
+  } finally {
+    loading.value = false
+  }
+}
 </script>
 <template>
   <div class="doctor-card">
@@ -11,11 +25,18 @@ defineProps<{
     <p class="name">{{ doctor.name }}</p>
     <p class="van-ellipsis">{{ doctor.hospitalName }} {{ doctor.depName }}</p>
     <p>{{ doctor.positionalTitles }}</p>
-    <van-button round size="small" type="primary">
+    <van-button
+      round
+      size="small"
+      type="primary"
+      :loading="loading"
+      @click="followDoctor(doctor)"
+    >
       {{ doctor.likeFlag === 1 ? '已关注' : '+ 关注' }}
     </van-button>
   </div>
 </template>
+
 <style scoped lang="scss">
 .doctor-card {
   width: 135px;
