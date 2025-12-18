@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import DoctorCard from '@/views/Home/components/DoctorCard.vue'
+import { useWindowSize } from '@vueuse/core'
+
+// 获取当前屏幕宽度
+const { width } = useWindowSize()
 </script>
 
 <template>
@@ -10,7 +14,11 @@ import DoctorCard from '@/views/Home/components/DoctorCard.vue'
     </div>
     <div class="body">
       <!-- swipe 组件 -->
-      <van-swipe :width="170" :show-indicators="false" :loop="false">
+      <van-swipe
+        :width="(150 / 375) * width"
+        :show-indicators="false"
+        :loop="false"
+      >
         <van-swipe-item v-for="i in 5" :key="i">
           <doctor-card></doctor-card>
         </van-swipe-item>
