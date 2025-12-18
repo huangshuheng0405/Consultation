@@ -1,23 +1,12 @@
 <script lang="ts" setup>
 import { Doctor } from '@/types/consult.js'
-import { ref } from 'vue'
-import { followOrUnfollowAPI } from '@/services/consult.js'
+import { useFollow } from '@/composables/index.js'
 
 defineProps<{
   doctor: Doctor
 }>()
 
-const loading = ref(false)
-
-const followDoctor = async (doctor: Doctor) => {
-  loading.value = true
-  try {
-    await followOrUnfollowAPI(doctor.id, 'doc')
-    doctor.likeFlag = doctor.likeFlag === 1 ? 0 : 1
-  } finally {
-    loading.value = false
-  }
-}
+const { loading, followDoctor } = useFollow()
 </script>
 <template>
   <div class="doctor-card">
