@@ -1,6 +1,7 @@
 import {
   DoctorPage,
   FollowType,
+  Image,
   KnowledgePage,
   KnowledgeParams,
   PageParams,
@@ -36,4 +37,14 @@ export const followOrUnfollowAPI = (id: string, type: FollowType = 'doc') => {
  * */
 export const getAllDepAPI = () => {
   return request<TopDep[]>('/dep/all')
+}
+
+/** 上传图片
+ * @return 图片信息
+ * @param file
+ */
+export const uploadImageAPI = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+  return request<Image>('/upload', 'post', formData)
 }

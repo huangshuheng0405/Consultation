@@ -2,6 +2,8 @@
 import { ConsultTime } from '@/enum/index.js'
 import { ref } from 'vue'
 import { ConsultIllness } from '@/types/consult.js'
+import { UploaderAfterRead, UploaderFileListItem } from 'vant'
+import { uploadImageAPI } from '@/services/consult.js'
 
 // 患病时间
 const timeOptions = [
@@ -28,13 +30,35 @@ const illnessDesc = ref<ConsultIllness>({
 // 上传图片
 const fileList = ref([])
 
-const onAfterRead = () => {
-  console.log('上传图片成功')
+// 添加上传图片
+const onAfterRead: UploaderAfterRead = (item) => {
+  if (Array.isArray(item)) return
+  if (!item.file) return
+  item.status = 'uploading'
+  item.message = '上传中...'
+
+  uploadImageAPI(item.file)
+    .then((res) => {
+      item.status = 'done'
+      item.message = undefined
+      item.url = res.data.url
+      // 同步数据
+      illnessDesc.value.pictures?.push(res.data)
+    })
+    .catch(() => {
+      item.status = 'failed'
+      item.message = '上传失败'
+    })
 }
 
-const onDeleteImg = () => {
-  console.log('删除图片')
+// 删除图片
+const onDeleteImg = (item: UploaderFileListItem) => {
+  illnessDesc.value.pictures = illnessDesc.value.pictures?.filter(
+    (pic) => pic.url !== item.url
+  )
 }
+
+// TODO 20-3-03
 </script>
 
 <template>
