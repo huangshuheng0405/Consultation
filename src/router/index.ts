@@ -42,6 +42,13 @@ const router = createRouter({
       }
     },
     {
+      path: '/consult/illness',
+      component: () => import('@/views/Consult/ConsultIllness.vue'),
+      meta: {
+        title: '病情描述'
+      }
+    },
+    {
       path: '/',
       component: () => import('@/views/Layout/index.vue'),
       redirect: '/home',

@@ -9,6 +9,6 @@ export enum ConsultType {
 export enum ConsultTime {
   week = 1,
   month,
-  halfYeay,
+  halfYear,
   more
 }
