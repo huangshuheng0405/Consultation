@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import { ConsultTime } from '@/enum/index.js'
-import { computed, ref } from 'vue'
-import { ConsultIllness } from '@/types/consult.js'
-import { showToast, UploaderAfterRead, UploaderFileListItem } from 'vant'
+import { computed, onMounted, ref } from 'vue'
+import { ConsultIllness, Image } from '@/types/consult.js'
+import {
+  showConfirmDialog,
+  showToast,
+  UploaderAfterRead,
+  UploaderFileListItem
+} from 'vant'
 import { uploadImageAPI } from '@/services/consult.js'
 import { useConsultStore } from '@/stores'
 import { useRouter } from 'vue-router'
@@ -22,7 +27,7 @@ const flagOptions = [
 ]
 
 // 病情描述对象
-const illnessDesc = ref<ConsultIllness>({
+const illnessForm = ref<ConsultIllness>({
   illnessDesc: '',
   illnessTime: undefined,
   consultFlag: undefined,
@@ -30,7 +35,7 @@ const illnessDesc = ref<ConsultIllness>({
 })
 
 // 上传图片
-const fileList = ref([])
+const fileList = ref<Image[]>([])
 
 // 添加上传图片
 const onAfterRead: UploaderAfterRead = (item) => {
@@ -45,7 +50,7 @@ const onAfterRead: UploaderAfterRead = (item) => {
       item.message = undefined
       item.url = res.data.url
       // 同步数据
-      illnessDesc.value.pictures?.push(res.data)
+      illnessForm.value.pictures?.push(res.data)
     })
     .catch(() => {
       item.status = 'failed'
@@ -55,7 +60,7 @@ const onAfterRead: UploaderAfterRead = (item) => {
 
 // 删除图片
 const onDeleteImg = (item: UploaderFileListItem) => {
-  illnessDesc.value.pictures = illnessDesc.value.pictures?.filter(
+  illnessForm.value.pictures = illnessForm.value.pictures?.filter(
     (pic) => pic.url !== item.url
   )
 }
@@ -63,9 +68,9 @@ const onDeleteImg = (item: UploaderFileListItem) => {
 // 按钮禁用
 const disabled = computed(
   () =>
-    !illnessDesc.value.illnessDesc ||
-    illnessDesc.value.illnessTime === undefined ||
-    illnessDesc.value.consultFlag === undefined
+    !illnessForm.value.illnessDesc ||
+    illnessForm.value.illnessTime === undefined ||
+    illnessForm.value.consultFlag === undefined
 )
 
 // 仓库
@@ -76,20 +81,42 @@ const router = useRouter()
 
 // 下一步
 const next = () => {
-  if (!illnessDesc.value.illnessDesc) {
+  if (!illnessForm.value.illnessDesc) {
     return showToast('病情描述不能为空')
   }
-  if (illnessDesc.value.illnessTime === undefined) {
+  if (illnessForm.value.illnessTime === undefined) {
     return showToast('请选择患病时间')
   }
-  if (illnessDesc.value.consultFlag === undefined) {
+  if (illnessForm.value.consultFlag === undefined) {
     return showToast('请选择是否就医过')
   }
   // 记录病情
-  consultStore.setIllnessDesc(illnessDesc.value)
+  consultStore.setIllnessDesc(illnessForm.value)
   // 跳转 携带标识
   router.push('/user/patient?isChange=1')
 }
+
+// 数据的回显
+onMounted(() => {
+  if (consultStore.consult.illnessDesc) {
+    showConfirmDialog({
+      title: '温馨提示',
+      message: '您是否需要恢复之前的填写内容？',
+      closeOnPopstate: false
+    }).then(() => {
+      // 数据回显
+      const { illnessDesc, illnessTime, consultFlag, pictures } =
+        consultStore.consult
+      illnessForm!.value = {
+        illnessDesc,
+        illnessTime,
+        consultFlag,
+        pictures
+      }
+      fileList.value = pictures || []
+    })
+  }
+})
 </script>
 
 <template>
@@ -114,7 +141,7 @@ const next = () => {
         type="textarea"
         rows="3"
         placeholder="请详细描述您的病情，病情描述不能为空"
-        v-model="illnessDesc.illnessDesc"
+        v-model="illnessForm.illnessDesc"
         :minlength="10"
         :maxlength="200"
       ></van-field>
@@ -122,14 +149,14 @@ const next = () => {
         <p>本次患病多久了？</p>
         <cp-radio-btn
           :options="timeOptions"
-          v-model="illnessDesc.illnessTime"
+          v-model="illnessForm.illnessTime"
         ></cp-radio-btn>
       </div>
       <div class="item">
         <p>此次病情是否去医院就诊过？</p>
         <cp-radio-btn
           :options="flagOptions"
-          v-model="illnessDesc.consultFlag"
+          v-model="illnessForm.consultFlag"
         ></cp-radio-btn>
       </div>
       <!--   上传组件   -->
