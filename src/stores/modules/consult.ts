@@ -14,7 +14,12 @@ export const useConsultStore = defineStore(
       consult.value.type = newConsult
     }
 
-    return { consult, setConsult }
+    // 记录问诊级别
+    const setIllnessType = (newIllnessType: 0 | 1) => {
+      consult.value.illnessType = newIllnessType
+    }
+
+    return { consult, setConsult, setIllnessType }
   },
   {
     persist: true
