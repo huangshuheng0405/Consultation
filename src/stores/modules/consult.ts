@@ -19,7 +19,12 @@ export const useConsultStore = defineStore(
       consult.value.illnessType = newIllnessType
     }
 
-    return { consult, setConsult, setIllnessType }
+    // 记录科室
+    const setDepId = (newDepId: string) => {
+      consult.value.depId = newDepId
+    }
+
+    return { consult, setConsult, setIllnessType, setDepId }
   },
   {
     persist: true

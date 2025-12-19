@@ -129,3 +129,13 @@ export type Consult = {
 // 把一个对象的属性变为可选
 type PartialConsult = Partial<Consult>
 // Required 把一个对象的属性变为必填
+
+// 二级科室
+type SubDep = {
+  id: string
+  name: string
+}
+
+type TopDep = SubDep & {
+  child: SubDep[]
+}
