@@ -102,6 +102,7 @@ onMounted(() => {
     showConfirmDialog({
       title: '温馨提示',
       message: '您是否需要恢复之前的填写内容？',
+      // 返回时还能弹出
       closeOnPopstate: false
     }).then(() => {
       // 数据回显
