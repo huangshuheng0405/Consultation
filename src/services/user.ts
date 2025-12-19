@@ -61,3 +61,10 @@ export const editPatientAPI = (patient: Patient) => {
 export const deletePatientAPI = (id: string) => {
   return request(`/patient/del/${id}`, 'DELETE')
 }
+
+/** 获取患者信息
+ * @param id 患者ID
+ */
+export const getPatientDetailAPI = (id: string) => {
+  return request<Patient>(`/patient/info/${id}`)
+}

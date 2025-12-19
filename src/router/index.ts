@@ -49,6 +49,13 @@ const router = createRouter({
       }
     },
     {
+      path: '/consult/pay',
+      component: () => import('@/views/Consult/ConsultPay.vue'),
+      meta: {
+        title: '问诊支付'
+      }
+    },
+    {
       path: '/',
       component: () => import('@/views/Layout/index.vue'),
       redirect: '/home',
