@@ -6,7 +6,7 @@ defineProps<{
   doctor: Doctor
 }>()
 
-const { loading, followDoctor } = useFollow()
+const { loading, follow } = useFollow()
 </script>
 <template>
   <div class="doctor-card">
@@ -19,7 +19,7 @@ const { loading, followDoctor } = useFollow()
       size="small"
       type="primary"
       :loading="loading"
-      @click="followDoctor(doctor)"
+      @click="follow(doctor)"
     >
       {{ doctor.likeFlag === 1 ? '已关注' : '+ 关注' }}
     </van-button>
