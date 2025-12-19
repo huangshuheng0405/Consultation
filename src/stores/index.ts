@@ -6,3 +6,4 @@ const pinia = createPinia().use(persist)
 export default pinia
 
 export * from './modules/user.js'
+export * from './modules/consult.js'

@@ -2,9 +2,13 @@
 import { ref } from 'vue'
 import KnowledgeList from '@/views/Home/components/KnowledgeList.vue'
 import FollowDoctor from '@/views/Home/components/FollowDoctor.vue'
+import { useConsultStore } from '@/stores/index.js'
+import { ConsultType } from '@/enum/index.js'
 
 // 默认选中第二个tab
 const active = ref(1)
+
+const consultStore = useConsultStore()
 </script>
 
 <template>
@@ -29,7 +33,11 @@ const active = ref(1)
           </router-link>
         </van-col>
         <van-col span="8">
-          <router-link to="/consult/fast" class="nav">
+          <router-link
+            to="/consult/fast"
+            class="nav"
+            @click="consultStore.setConsult(ConsultType.fast)"
+          >
             <cp-icon name="home-graphic"></cp-icon>
             <p class="title">极速问诊</p>
             <p class="desc">20s医生极速回复</p>
