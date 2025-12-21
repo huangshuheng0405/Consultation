@@ -7,6 +7,7 @@ import {
   KnowledgePage,
   KnowledgeParams,
   PageParams,
+  PartialConsult,
   TopDep
 } from '@/types/consult.js'
 import { request } from '@/utils/request.js'
@@ -60,4 +61,11 @@ export const getConsultOrderPreviewAPI = (params: ConsultOrderPreParams) => {
     'get',
     params
   )
+}
+
+/** 创建问诊订单
+ * @param data
+ * */
+export const createConsultOrderAPI = (data: PartialConsult) => {
+  return request<{ id: string }>('/patient/consult/order', 'POST', data)
 }

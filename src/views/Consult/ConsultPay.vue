@@ -2,9 +2,13 @@
 import { ConsultOrderPreData } from '@/types/consult.js'
 import { useConsultStore } from '@/stores/index.js'
 import { onMounted, ref } from 'vue'
-import { getConsultOrderPreviewAPI } from '@/services/consult.js'
+import {
+  createConsultOrderAPI,
+  getConsultOrderPreviewAPI
+} from '@/services/consult.js'
 import { Patient } from '@/types/user.js'
 import { getPatientDetailAPI } from '@/services/user.js'
+import { showToast } from 'vant'
 
 // 获取预支付信息
 const payInfo = ref<ConsultOrderPreData>()
@@ -33,6 +37,21 @@ onMounted(() => {
 
 // 同意协议
 const agree = ref(false)
+
+// 生成订单
+const show = ref(false)
+const paymentMethod = ref<0 | 1>()
+const loading = ref(false)
+const orderId = ref('')
+const onSubmit = async () => {
+  if (!agree.value) return showToast('请先阅读并同意协议')
+  loading.value = true
+  const res = await createConsultOrderAPI(consultStore.consult)
+  loading.value = false
+  consultStore.clearConsult()
+  orderId.value = res.data.id
+  show.value = true
+}
 </script>
 
 <template>
@@ -76,7 +95,32 @@ const agree = ref(false)
       :price="payInfo.actualPayment * 100"
       button-text="立即支付"
       text-align="left"
+      @click="onSubmit"
+      :loading="loading"
     />
+    <!--  支付抽屉 控制面板  -->
+    <van-action-sheet v-model:show="show" title="选择支付方式">
+      <div class="pay-type">
+        <p class="amount">￥ {{ payInfo.actualPayment.toFixed(2) }}</p>
+        <van-cell-group>
+          <van-cell title="微信支付" @click="paymentMethod = 0">
+            <template #icon><cp-icon name="consult-wechat" /></template>
+            <template #extra
+              ><van-checkbox :checked="paymentMethod === 0"
+            /></template>
+          </van-cell>
+          <van-cell title="支付宝支付" @click="paymentMethod = 1">
+            <template #icon><cp-icon name="consult-alipay" /></template>
+            <template #extra
+              ><van-checkbox :checked="paymentMethod === 1"
+            /></template>
+          </van-cell>
+        </van-cell-group>
+        <div class="btn">
+          <van-button type="primary" round block>立即支付</van-button>
+        </div>
+      </div>
+    </van-action-sheet>
   </div>
   <div class="consult-pay-page" v-else>
     <cp-nav-bar title="支付" />
