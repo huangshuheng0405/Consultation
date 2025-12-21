@@ -69,3 +69,14 @@ export const getConsultOrderPreviewAPI = (params: ConsultOrderPreParams) => {
 export const createConsultOrderAPI = (data: PartialConsult) => {
   return request<{ id: string }>('/patient/consult/order', 'POST', data)
 }
+
+/** 获取问诊订单详情
+ * @param
+ * */
+export const getConsultOrderUrlAPI = (params: {
+  paymentMethod: 0 | 1
+  orderId: string
+  payCallBack: string
+}) => {
+  return request<{ payUrl: string }>('/patient/consult/pay', 'POST', params)
+}
