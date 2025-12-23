@@ -85,20 +85,18 @@ const formatTime = (time: string) => dayjs(time).format('HH:mm')
     </div>
     <van-image :src="item.fromAvatar" />
   </div>
-  <!-- 发送图片 -->
-  <!--  <div class="msg msg-to">-->
-  <!--    <div class="content">-->
-  <!--      <div class="time">20:12</div>-->
-  <!--      <van-image-->
-  <!--        fit="contain"-->
-  <!--        src="https://yjy-oss-files.oss-cn-zhangjiakou.aliyuncs.com/tuxian/popular_3.jpg"-->
-  <!--      />-->
-  <!--    </div>-->
-  <!--    <van-image-->
-  <!--      src="https://yjy-oss-files.oss-cn-zhangjiakou.aliyuncs.com/tuxian/popular_3.jpg"-->
-  <!--    />-->
-  <!--  </div>-->
-  <!-- 接收文字 -->
+  <!--  发送图片-->
+  <div
+    class="msg msg-to"
+    v-if="item.msgType === MsgType.MsgImage && item.from === userStore.user?.id"
+  >
+    <div class="content">
+      <div class="time">{{ formatTime(item.createTime) }}</div>
+      <van-image fit="contain" :src="item.msg.picture?.url" />
+    </div>
+    <van-image :src="item.fromAvatar" />
+  </div>
+  <!--  接收文字-->
   <div
     class="msg msg-from"
     v-if="item.msgType === MsgType.MsgText && item.from !== userStore.user?.id"
@@ -110,18 +108,16 @@ const formatTime = (time: string) => dayjs(time).format('HH:mm')
     </div>
   </div>
   <!-- 接收图片 -->
-  <!--  <div class="msg msg-from">-->
-  <!--    <van-image-->
-  <!--      src="https://yjy-oss-files.oss-cn-zhangjiakou.aliyuncs.com/tuxian/popular_3.jpg"-->
-  <!--    />-->
-  <!--    <div class="content">-->
-  <!--      <div class="time">20:12</div>-->
-  <!--      <van-image-->
-  <!--        fit="contain"-->
-  <!--        src="https://yjy-oss-files.oss-cn-zhangjiakou.aliyuncs.com/tuxian/popular_3.jpg"-->
-  <!--      />-->
-  <!--    </div>-->
-  <!--  </div>-->
+  <div
+    class="msg msg-from"
+    v-if="item.msgType === MsgType.MsgImage && item.from !== userStore.user?.id"
+  >
+    <van-image :src="item.fromAvatar" />
+    <div class="content">
+      <div class="time">{{ formatTime(item.createTime) }}</div>
+      <van-image fit="contain" :src="item.msg.picture?.url" />
+    </div>
+  </div>
   <!-- 处方卡片 -->
   <!--  <div class="msg msg-recipe">-->
   <!--    <div class="content">-->
