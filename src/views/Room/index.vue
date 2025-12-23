@@ -8,7 +8,7 @@ import { useRoute } from 'vue-router'
 import { onMounted, onUnmounted, ref } from 'vue'
 import { baseURL } from '@/utils/request.js'
 import { Message, TimeMessages } from '@/types/room.js'
-import { MsgType } from '@/enum/index.js'
+import { MsgType, OrderType } from '@/enum/index.js'
 import { ConsultOrderItem } from '@/types/consult.js'
 import { getConsultOrderDetailAPI } from '@/services/consult'
 
@@ -75,7 +75,10 @@ onUnmounted(() => {
   <div class="room-page">
     <cp-nav-bar title="问诊室" />
     <!--  状态栏  -->
-    <room-status></room-status>
+    <room-status
+      :status="consult?.status"
+      :countDown="consult?.countdown"
+    ></room-status>
     <!--  消息  -->
     <room-message
       v-for="item in list"
@@ -83,7 +86,9 @@ onUnmounted(() => {
       :item="item"
     ></room-message>
     <!--  操作栏  -->
-    <room-action></room-action>
+    <room-action
+      :disabled="consult?.status !== OrderType.ConsultChat"
+    ></room-action>
   </div>
 </template>
 
