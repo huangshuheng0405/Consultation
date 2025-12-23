@@ -5,13 +5,16 @@ import RoomMessage from '@/views/Room/components/RoomMessage.vue'
 import io, { Socket } from 'socket.io-client'
 import { useUserStore } from '@/stores/index.js'
 import { useRoute } from 'vue-router'
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { baseURL } from '@/utils/request.js'
+import { Message, TimeMessages } from '@/types/room.js'
+import { MsgType } from '@/enum/index.js'
 
 const userStore = useUserStore()
 const route = useRoute()
+const list = ref<Message[]>([])
 let socket: Socket
-onMounted(() => {
+onMounted(async () => {
   socket = io(baseURL, {
     auth: {
       token: `Bearer ${userStore.user?.token}`
@@ -29,8 +32,22 @@ onMounted(() => {
   socket.on('error', (err) => {
     console.log(err)
   })
-  socket.on('chatMsgList', (res) => {
-    console.log(res)
+  // 获取聊天记录 第一次是默认消息
+  socket.on('chatMsgList', ({ data }: { data: TimeMessages[] }) => {
+    const arr: Message[] = []
+    data.forEach((item) => {
+      arr.push({
+        msgType: MsgType.Notify,
+        msg: {
+          content: item.createTime
+        },
+        createTime: item.createTime,
+        id: item.createTime
+      })
+      arr.push(...item.items)
+    })
+    // console.log(arr)
+    list.value.unshift(...arr)
   })
 })
 onUnmounted(() => {
