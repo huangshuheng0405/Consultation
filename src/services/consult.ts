@@ -1,4 +1,5 @@
 import {
+  ConsultOrderItem,
   ConsultOrderPreData,
   ConsultOrderPreParams,
   DoctorPage,
@@ -79,4 +80,13 @@ export const getConsultOrderUrlAPI = (params: {
   payCallBack: string
 }) => {
   return request<{ payUrl: string }>('/patient/consult/pay', 'POST', params)
+}
+
+/** 获取问诊订单详情
+ * @param orderId 订单ID
+ * */
+export const getConsultOrderDetailAPI = (orderId: string) => {
+  return request<ConsultOrderItem>('/patient/consult/order/detail', 'GET', {
+    orderId
+  })
 }
