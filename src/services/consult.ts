@@ -90,3 +90,7 @@ export const getConsultOrderDetailAPI = (orderId: string) => {
     orderId
   })
 }
+/** 获取处方图片  */
+export const getPrescriptionAPI = (id: string) => {
+  return request<{ url: string }>(`/patient/consult/prescription/${id}`, 'GET')
+}
