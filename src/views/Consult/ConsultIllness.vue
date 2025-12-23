@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ConsultTime } from '@/enum/index.js'
 import { computed, onMounted, ref } from 'vue'
 import { ConsultIllness, Image } from '@/types/consult.js'
 import {
@@ -11,20 +10,7 @@ import {
 import { uploadImageAPI } from '@/services/consult.js'
 import { useConsultStore } from '@/stores'
 import { useRouter } from 'vue-router'
-
-// 患病时间
-const timeOptions = [
-  { label: '一周内', value: ConsultTime.week },
-  { label: '一月内', value: ConsultTime.month },
-  { label: '半年内', value: ConsultTime.halfYear },
-  { label: '一年内', value: ConsultTime.more }
-]
-
-// 就诊过
-const flagOptions = [
-  { label: '就诊过', value: 1 },
-  { label: '没就诊过', value: 0 }
-]
+import { flagOptions, timeOptions } from '@/services/constants.js'
 
 // 病情描述对象
 const illnessForm = ref<ConsultIllness>({

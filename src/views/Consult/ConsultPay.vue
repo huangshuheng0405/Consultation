@@ -121,7 +121,6 @@ const pay = async () => {
   })
   window.location.href = res.data.payUrl
 }
-// TODO 22
 </script>
 
 <template>
@@ -148,7 +147,7 @@ const pay = async () => {
     <van-cell-group>
       <van-cell
         title="患者信息"
-        :value="`${patientInfo.name} | ${patientInfo.gender} | ${patientInfo.age}岁`"
+        :value="`${patientInfo.name} | ${patientInfo.genderValue} | ${patientInfo.age}岁`"
       ></van-cell>
       <van-cell
         title="病情描述"

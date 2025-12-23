@@ -33,7 +33,11 @@ onMounted(async () => {
     console.log(err)
   })
   // 获取聊天记录 第一次是默认消息
+  // socket.on('chatMsgList', (res) => {
+  //   console.log(res)
+  // })
   socket.on('chatMsgList', ({ data }: { data: TimeMessages[] }) => {
+    console.log('chatMsgList', data)
     const arr: Message[] = []
     data.forEach((item) => {
       arr.push({
@@ -61,7 +65,11 @@ onUnmounted(() => {
     <!--  状态栏  -->
     <room-status></room-status>
     <!--  消息  -->
-    <room-message></room-message>
+    <room-message
+      v-for="item in list"
+      :key="item.id"
+      :item="item"
+    ></room-message>
     <!--  操作栏  -->
     <room-action></room-action>
   </div>
