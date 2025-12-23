@@ -5,12 +5,12 @@ import RoomMessage from '@/views/Room/components/RoomMessage.vue'
 import io, { Socket } from 'socket.io-client'
 import { useUserStore } from '@/stores/index.js'
 import { useRoute } from 'vue-router'
-import { onMounted, onUnmounted, ref } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { baseURL } from '@/utils/request.js'
 import { Message, TimeMessages } from '@/types/room.js'
 import { MsgType, OrderType } from '@/enum/index.js'
 import { ConsultOrderItem } from '@/types/consult.js'
-import { getConsultOrderDetailAPI } from '@/services/consult'
+import { getConsultOrderDetailAPI } from '@/services/consult.js'
 
 const userStore = useUserStore()
 const route = useRoute()
@@ -65,6 +65,14 @@ onMounted(async () => {
   })
   // 监听订单状态变化
   socket.on('statusChange', () => loadConsult())
+  // 接收聊天消息
+  socket.on('receiveChatMsg', async (event) => {
+    console.log('chatMsg', event)
+    list.value.push(event)
+    await nextTick()
+    //  向上滚动
+    window.scrollTo(0, document.body.scrollHeight)
+  })
 })
 onUnmounted(() => {
   socket.close()
