@@ -3,7 +3,10 @@ import { ConsultOrderItem } from '@/types/consult.js'
 import { OrderType } from '@/enum/index.js'
 import { useRouter } from 'vue-router'
 import { computed, ref } from 'vue'
-import { cancelConsultOrderAPI } from '@/services/consult.js'
+import {
+  cancelConsultOrderAPI,
+  deleteConsultOrderAPI
+} from '@/services/consult.js'
 import { showFailToast, showSuccessToast } from 'vant'
 
 const router = useRouter()
@@ -31,6 +34,29 @@ const cancelOrder = async (item: ConsultOrderItem) => {
     showFailToast('取消失败')
   } finally {
     loading.value = false
+  }
+}
+const onSelect = (action: { text: string }, index: number) => {
+  if (index === 1) {
+    deleteOrder(props.item)
+  }
+}
+// 删除订单
+const emit = defineEmits<{
+  (e: 'on-delete', id: string): void
+}>()
+const deleteLoading = ref(false)
+const deleteOrder = async (item: ConsultOrderItem) => {
+  try {
+    deleteLoading.value = true
+    await deleteConsultOrderAPI(item.id)
+    emit('on-delete', item.id)
+    showSuccessToast('删除成功')
+  } catch (error) {
+    console.log(error)
+    showFailToast('删除失败')
+  } finally {
+    deleteLoading.value = false
   }
 }
 </script>
@@ -150,7 +176,15 @@ const cancelOrder = async (item: ConsultOrderItem) => {
       >
     </div>
     <div class="foot" v-if="item.status === OrderType.ConsultCancel">
-      <van-button class="gray" plain size="small" round>删除订单</van-button>
+      <van-button
+        :loading="deleteLoading"
+        @click="deleteOrder(item)"
+        class="gray"
+        plain
+        size="small"
+        round
+        >删除订单</van-button
+      >
       <van-button type="primary" plain size="small" round :to="`/`"
         >咨询其他医生</van-button
       >

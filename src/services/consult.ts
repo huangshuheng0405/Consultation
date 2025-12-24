@@ -115,3 +115,7 @@ export const getConsultOrderListAPI = (params: ConsultOrderListParams) => {
 export const cancelConsultOrderAPI = (id: string) => {
   return request(`/patient/order/cancel/${id}`, 'PUT')
 }
+/** 删除订单 */
+export const deleteConsultOrderAPI = (id: string) => {
+  return request(`/patient/order/${id}`, 'DELETE')
+}
