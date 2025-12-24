@@ -107,9 +107,11 @@ export const evaluateDocAPI = (data: {
   return request('/patient/order/evaluate', 'POST', data)
 }
 
-/** 获取订单列表
- *
- */
+/** 获取订单列表 */
 export const getConsultOrderListAPI = (params: ConsultOrderListParams) => {
   return request<ConsultOrderPage>('/patient/consult/order/list', 'GET', params)
+}
+/** 取消订单 */
+export const cancelConsultOrderAPI = (id: string) => {
+  return request(`/patient/order/cancel/${id}`, 'PUT')
 }

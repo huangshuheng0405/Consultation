@@ -2,11 +2,37 @@
 import { ConsultOrderItem } from '@/types/consult.js'
 import { OrderType } from '@/enum/index.js'
 import { useRouter } from 'vue-router'
+import { computed, ref } from 'vue'
+import { cancelConsultOrderAPI } from '@/services/consult.js'
+import { showFailToast, showSuccessToast } from 'vant'
 
 const router = useRouter()
-defineProps<{
+const props = defineProps<{
   item: ConsultOrderItem
 }>()
+
+// 更多操作
+const showPopover = ref(false)
+const actions = computed(() => [
+  { text: '查看处方', disabled: !props.item.prescriptionId },
+  { text: '删除订单' }
+])
+// 取消订单
+const loading = ref(false)
+const cancelOrder = async (item: ConsultOrderItem) => {
+  try {
+    loading.value = true
+    await cancelConsultOrderAPI(item.id)
+    item.status = OrderType.ConsultCancel
+    item.statusValue = '已取消'
+    showSuccessToast('取消成功')
+  } catch (error) {
+    console.log(error)
+    showFailToast('取消失败')
+  } finally {
+    loading.value = false
+  }
+}
 </script>
 
 <template>
@@ -37,7 +63,15 @@ defineProps<{
       </div>
     </div>
     <div class="foot" v-if="item.status === OrderType.ConsultPay">
-      <van-button class="gray" plain size="small" round>取消问诊</van-button>
+      <van-button
+        :loading="loading"
+        @click="cancelOrder(item)"
+        class="gray"
+        plain
+        size="small"
+        round
+        >取消问诊</van-button
+      >
       <van-button
         type="primary"
         plain
@@ -48,7 +82,15 @@ defineProps<{
       >
     </div>
     <div class="foot" v-if="item.status === OrderType.ConsultWait">
-      <van-button class="gray" plain size="small" round>取消问诊</van-button>
+      <van-button
+        :loading="loading"
+        @click="cancelOrder(item)"
+        class="gray"
+        plain
+        size="small"
+        round
+        >取消问诊</van-button
+      >
       <van-button
         type="primary"
         plain
@@ -76,8 +118,22 @@ defineProps<{
         >继续沟通</van-button
       >
     </div>
+    <!--    v-if="item.status === OrderType.ConsultComplete"-->
     <div class="foot" v-if="item.status === OrderType.ConsultComplete">
-      <div class="moew">更多</div>
+      <div class="more">
+        <van-popover
+          v-model:show="showPopover"
+          :actions="actions"
+          @select="onSelect"
+          placement="top-start"
+        >
+          <template #reference>
+            <van-button class="gray" plain size="small" round>
+              更多
+            </van-button></template
+          >
+        </van-popover>
+      </div>
       <van-button
         class="gray"
         plain
@@ -164,6 +220,7 @@ defineProps<{
       }
     }
     .more {
+      margin-left: -15px;
       color: var(--cp-tag);
       flex: 1;
       font-size: 13px;
