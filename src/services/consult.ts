@@ -1,5 +1,7 @@
 import {
   ConsultOrderItem,
+  ConsultOrderListParams,
+  ConsultOrderPage,
   ConsultOrderPreData,
   ConsultOrderPreParams,
   DoctorPage,
@@ -103,4 +105,11 @@ export const evaluateDocAPI = (data: {
   anonymousFlag: 0 | 1
 }) => {
   return request('/patient/order/evaluate', 'POST', data)
+}
+
+/** 获取订单列表
+ *
+ */
+export const getConsultOrderListAPI = (params: ConsultOrderListParams) => {
+  return request<ConsultOrderPage>('/patient/consult/order/list', 'GET', params)
 }
