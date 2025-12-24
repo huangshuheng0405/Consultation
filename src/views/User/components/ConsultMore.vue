@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 
 const props = defineProps<{
-  disabled: boolean
+  disabled?: boolean
 }>()
 
 // 更多操作
