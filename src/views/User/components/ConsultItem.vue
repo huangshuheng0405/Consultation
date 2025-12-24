@@ -2,25 +2,20 @@
 import { ConsultOrderItem } from '@/types/consult.js'
 import { OrderType } from '@/enum/index.js'
 import { useRouter } from 'vue-router'
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import {
   cancelConsultOrderAPI,
   deleteConsultOrderAPI
 } from '@/services/consult.js'
 import { showFailToast, showSuccessToast } from 'vant'
 import { useShowPrescription } from '@/composables'
+import ConsultMore from '@/views/User/components/ConsultMore.vue'
 
 const router = useRouter()
-const props = defineProps<{
+defineProps<{
   item: ConsultOrderItem
 }>()
 
-// 更多操作
-const showPopover = ref(false)
-const actions = computed(() => [
-  { text: '查看处方', disabled: !props.item.prescriptionId },
-  { text: '删除订单' }
-])
 // 取消订单
 const loading = ref(false)
 const cancelOrder = async (item: ConsultOrderItem) => {
@@ -37,14 +32,7 @@ const cancelOrder = async (item: ConsultOrderItem) => {
     loading.value = false
   }
 }
-const onSelect = (action: { text: string }, index: number) => {
-  if (index === 1) {
-    deleteOrder(props.item)
-  }
-  if (index === 0 && props.item.prescriptionId) {
-    onShowPrescription(props.item.prescriptionId)
-  }
-}
+
 // 删除订单
 const emit = defineEmits<{
   (e: 'on-delete', id: string): void
@@ -152,21 +140,13 @@ const { onShowPrescription } = useShowPrescription()
       >
     </div>
     <!--    v-if="item.status === OrderType.ConsultComplete"-->
-    <div class="foot" v-if="item.status === OrderType.ConsultComplete">
-      <div class="more">
-        <van-popover
-          v-model:show="showPopover"
-          :actions="actions"
-          @select="onSelect"
-          placement="top-start"
-        >
-          <template #reference>
-            <van-button class="gray" plain size="small" round>
-              更多
-            </van-button></template
-          >
-        </van-popover>
-      </div>
+    <div class="foot">
+      <!--   更多组件   -->
+      <consult-more
+        :disabled="!item.prescriptionId"
+        @on-preview="onShowPrescription(item.prescriptionId!)"
+        @on-delete="deleteOrder(item)"
+      ></consult-more>
       <van-button
         class="gray"
         plain
@@ -259,12 +239,6 @@ const { onShowPrescription } = useShowPrescription()
         color: var(--cp-text3);
         background-color: var(--cp-bg);
       }
-    }
-    .more {
-      margin-left: -15px;
-      color: var(--cp-tag);
-      flex: 1;
-      font-size: 13px;
     }
   }
 }
