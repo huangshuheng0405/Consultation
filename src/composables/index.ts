@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { FollowType } from '@/types/consult.js'
-import { followOrUnfollowAPI } from '@/services/consult.js'
+import { followOrUnfollowAPI, getPrescriptionAPI } from '@/services/consult.js'
+import { showImagePreview } from 'vant'
 
 // 关注
 export const useFollow = (type: FollowType = 'doc') => {
@@ -17,4 +18,15 @@ export const useFollow = (type: FollowType = 'doc') => {
     }
   }
   return { loading, follow }
+}
+
+export const useShowPrescription = () => {
+  // 查看处方
+  const onShowPrescription = async (id: string) => {
+    if (id) {
+      const res = await getPrescriptionAPI(id)
+      showImagePreview([res.data.url])
+    }
+  }
+  return { onShowPrescription }
 }

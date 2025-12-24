@@ -33,6 +33,7 @@ const onDelete = (id: string) => {
   list.value = list.value.filter((item) => item.id !== id)
   if (!list.value.length) onLoad()
 }
+// TODO 25-7-08
 </script>
 
 <template>

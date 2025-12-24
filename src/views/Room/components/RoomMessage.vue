@@ -6,8 +6,8 @@ import { Image } from '@/types/consult.js'
 import { showImagePreview, showToast } from 'vant'
 import { useUserStore } from '@/stores/index.js'
 import dayjs from 'dayjs'
-import { getPrescriptionAPI } from '@/services/consult'
 import EvaluateCard from '@/views/Room/components/EvaluateCard.vue'
+import { useShowPrescription } from '@/composables/index.js'
 
 defineProps<{
   item: Message
@@ -30,12 +30,7 @@ const userStore = useUserStore()
 // 格式化时间
 const formatTime = (time: string) => dayjs(time).format('HH:mm')
 // 查看处方
-const onShowPrescription = async (id: string) => {
-  if (id) {
-    const res = await getPrescriptionAPI(id)
-    showImagePreview([res.data.url])
-  }
-}
+const { onShowPrescription } = useShowPrescription()
 </script>
 
 <template>

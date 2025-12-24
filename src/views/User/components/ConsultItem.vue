@@ -8,6 +8,7 @@ import {
   deleteConsultOrderAPI
 } from '@/services/consult.js'
 import { showFailToast, showSuccessToast } from 'vant'
+import { useShowPrescription } from '@/composables'
 
 const router = useRouter()
 const props = defineProps<{
@@ -40,6 +41,9 @@ const onSelect = (action: { text: string }, index: number) => {
   if (index === 1) {
     deleteOrder(props.item)
   }
+  if (index === 0 && props.item.prescriptionId) {
+    onShowPrescription(props.item.prescriptionId)
+  }
 }
 // 删除订单
 const emit = defineEmits<{
@@ -59,6 +63,8 @@ const deleteOrder = async (item: ConsultOrderItem) => {
     deleteLoading.value = false
   }
 }
+// 查看处方
+const { onShowPrescription } = useShowPrescription()
 </script>
 
 <template>
@@ -133,6 +139,7 @@ const deleteOrder = async (item: ConsultOrderItem) => {
         plain
         size="small"
         round
+        @@click="onShowPrescription(item.prescriptionId)"
         >查看处方</van-button
       >
       <van-button
