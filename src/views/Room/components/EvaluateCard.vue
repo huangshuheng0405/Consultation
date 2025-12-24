@@ -1,19 +1,36 @@
 <script setup lang="ts">
 import { EvaluateDoc } from '@/types/room.js'
-import { computed, ref } from 'vue'
+import { computed, inject, Ref, ref } from 'vue'
 import { showToast } from 'vant'
+import { ConsultOrderItem } from '@/types/consult.js'
+import { evaluateDocAPI } from '@/services/consult.js'
 
 defineProps<{
   evaluateDoc?: EvaluateDoc
 }>()
+// 注入问诊订单
+const consult = inject<Ref<ConsultOrderItem>>('consult')
+// TODO 5-02 15:39
+const completeEvaluate = inject<(score: number) => void>('completeEvaluate')
 // 收集评价信息
 const evaluateScore = ref(0)
 const evaluateContent = ref('')
 const anonymousFlag = ref(false)
-const disabled = computed(() => evaluateScore.value || evaluateContent.value)
+const disabled = computed(() => !evaluateScore.value || !evaluateContent.value)
 const onSubmit = async () => {
   if (!evaluateScore.value) return showToast('请选择评价分数')
   if (!evaluateContent.value) return showToast('请输入评价内容')
+  if (!consult?.value) return showToast('未找到订单')
+  if (consult.value.docInfo) {
+    await evaluateDocAPI({
+      orderId: consult?.value.id,
+      score: evaluateScore.value,
+      content: evaluateContent.value,
+      anonymousFlag: anonymousFlag.value ? 1 : 0,
+      docId: consult?.value.docInfo?.id
+    })
+    completeEvaluate?.(evaluateScore.value)
+  }
 }
 </script>
 
@@ -22,7 +39,7 @@ const onSubmit = async () => {
     <p class="title">医生服务评价</p>
     <p class="desc">我们会更加努力提升服务质量</p>
     <van-rate
-      :modelValue="3"
+      :modelValue="evaluateDoc.score"
       size="7vw"
       gutter="3vw"
       color="#FADB14"
@@ -30,7 +47,7 @@ const onSubmit = async () => {
       void-color="rgba(0,0,0,0.04)"
     />
   </div>
-  <div class="evaluate-card">
+  <div class="evaluate-card" v-else>
     <p class="title">感谢您的评价</p>
     <p class="desc">本次在线问诊服务您还满意吗？</p>
     <van-rate

@@ -94,3 +94,13 @@ export const getConsultOrderDetailAPI = (orderId: string) => {
 export const getPrescriptionAPI = (id: string) => {
   return request<{ url: string }>(`/patient/consult/prescription/${id}`, 'GET')
 }
+/** 评价医生 */
+export const evaluateDocAPI = (data: {
+  docId: string
+  orderId: string
+  score: number
+  content: string
+  anonymousFlag: 0 | 1
+}) => {
+  return request('/patient/order/evaluate', 'POST', data)
+}
