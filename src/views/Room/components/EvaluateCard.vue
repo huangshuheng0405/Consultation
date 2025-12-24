@@ -10,7 +10,7 @@ defineProps<{
 }>()
 // 注入问诊订单
 const consult = inject<Ref<ConsultOrderItem>>('consult')
-// TODO 5-02 15:39
+
 const completeEvaluate = inject<(score: number) => void>('completeEvaluate')
 // 收集评价信息
 const evaluateScore = ref(0)
