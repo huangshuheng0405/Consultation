@@ -102,7 +102,7 @@ const onClose = () => {
     })
     .catch(() => {
       orderId.value = ''
-      router.push('user/consult')
+      router.replace('/user/consult')
       return true
     })
 }
