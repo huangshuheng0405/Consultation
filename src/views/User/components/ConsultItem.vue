@@ -2,14 +2,15 @@
 import { ConsultOrderItem } from '@/types/consult.js'
 import { OrderType } from '@/enum/index.js'
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
-import { deleteConsultOrderAPI } from '@/services/consult.js'
-import { showFailToast, showSuccessToast } from 'vant'
-import { useCancelOrder, useShowPrescription } from '@/composables'
+import {
+  useCancelOrder,
+  useDeleteOrder,
+  useShowPrescription
+} from '@/composables'
 import ConsultMore from '@/views/User/components/ConsultMore.vue'
 
 const router = useRouter()
-defineProps<{
+const props = defineProps<{
   item: ConsultOrderItem
 }>()
 
@@ -19,20 +20,9 @@ const { cancelOrder, loading } = useCancelOrder()
 const emit = defineEmits<{
   (e: 'on-delete', id: string): void
 }>()
-const deleteLoading = ref(false)
-const deleteOrder = async (item: ConsultOrderItem) => {
-  try {
-    deleteLoading.value = true
-    await deleteConsultOrderAPI(item.id)
-    emit('on-delete', item.id)
-    showSuccessToast('删除成功')
-  } catch (error) {
-    console.log(error)
-    showFailToast('删除失败')
-  } finally {
-    deleteLoading.value = false
-  }
-}
+const { loading: deleteLoading, deleteOrder } = useDeleteOrder(() => {
+  emit('on-delete', props.item.id)
+})
 // 查看处方
 const { onShowPrescription } = useShowPrescription()
 </script>

@@ -7,6 +7,7 @@ import {
 } from '@/services/consult.js'
 import { showFailToast, showImagePreview, showSuccessToast } from 'vant'
 import { OrderType } from '@/enum/index.js'
+import { deleteConsultOrderAPI } from '@/services/consult.js'
 
 // 关注
 export const useFollow = (type: FollowType = 'doc') => {
@@ -55,4 +56,22 @@ export const useCancelOrder = () => {
     }
   }
   return { loading, cancelOrder }
+}
+// 删除订单
+export const useDeleteOrder = (callback: () => void) => {
+  const loading = ref(false)
+  const deleteOrder = async (item: ConsultOrderItem) => {
+    try {
+      loading.value = true
+      await deleteConsultOrderAPI(item.id)
+      callback()
+      showSuccessToast('删除成功')
+    } catch (error) {
+      console.log(error)
+      showFailToast('删除失败')
+    } finally {
+      loading.value = false
+    }
+  }
+  return { loading, deleteOrder }
 }
