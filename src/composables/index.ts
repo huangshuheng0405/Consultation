@@ -1,7 +1,12 @@
 import { ref } from 'vue'
-import { FollowType } from '@/types/consult.js'
-import { followOrUnfollowAPI, getPrescriptionAPI } from '@/services/consult.js'
-import { showImagePreview } from 'vant'
+import { ConsultOrderItem, FollowType } from '@/types/consult.js'
+import {
+  cancelConsultOrderAPI,
+  followOrUnfollowAPI,
+  getPrescriptionAPI
+} from '@/services/consult.js'
+import { showFailToast, showImagePreview, showSuccessToast } from 'vant'
+import { OrderType } from '@/enum/index.js'
 
 // 关注
 export const useFollow = (type: FollowType = 'doc') => {
@@ -29,4 +34,25 @@ export const useShowPrescription = () => {
     }
   }
   return { onShowPrescription }
+}
+
+// 取消订单
+export const useCancelOrder = () => {
+  // 取消订单
+  const loading = ref(false)
+  const cancelOrder = async (item: ConsultOrderItem) => {
+    try {
+      loading.value = true
+      await cancelConsultOrderAPI(item.id)
+      item.status = OrderType.ConsultCancel
+      item.statusValue = '已取消'
+      showSuccessToast('取消成功')
+    } catch (error) {
+      console.log(error)
+      showFailToast('取消失败')
+    } finally {
+      loading.value = false
+    }
+  }
+  return { loading, cancelOrder }
 }
