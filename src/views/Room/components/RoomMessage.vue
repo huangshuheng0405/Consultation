@@ -1,25 +1,18 @@
 <script setup lang="ts">
 import { Message } from '@/types/room.js'
-import { ConsultTime, MsgType } from '@/enum/index.js'
-import { flagOptions, timeOptions } from '@/services/constants.js'
+import { MsgType } from '@/enum/index.js'
 import { Image } from '@/types/consult.js'
 import { showImagePreview, showToast } from 'vant'
 import { useUserStore } from '@/stores/index.js'
 import dayjs from 'dayjs'
 import EvaluateCard from '@/views/Room/components/EvaluateCard.vue'
 import { useShowPrescription } from '@/composables/index.js'
+import { getConsultFlag, getIllnessTime } from '@/utils/filter.js'
 
 defineProps<{
   item: Message
 }>()
-// 获取患病时间
-const getIllnessTime = (time: ConsultTime) => {
-  return timeOptions.find((item) => item.value === time)?.label
-}
-// 获取是否就诊
-const getConsultFlag = (flag: 1 | 0) => {
-  return flagOptions.find((item) => item.value === flag)?.label
-}
+
 // 获取图片预览
 const onPreviewImage = (pictures?: Image[]) => {
   if (pictures && pictures.length)

@@ -73,6 +73,13 @@ const router = createRouter({
       }
     },
     {
+      path: '/user/consult/:id',
+      component: () => import('@/views/User/ConsultDetail.vue'),
+      meta: {
+        title: '问诊详情'
+      }
+    },
+    {
       path: '/',
       component: () => import('@/views/Layout/index.vue'),
       redirect: '/home',
