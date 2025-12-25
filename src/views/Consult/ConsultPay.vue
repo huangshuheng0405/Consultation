@@ -152,6 +152,7 @@ const onClose = () => {
       v-model:show="show"
       :actual-payment="payInfo.actualPayment"
       :on-close="onClose"
+      pay-callback="/room"
     />
   </div>
   <div class="consult-pay-page" v-else>

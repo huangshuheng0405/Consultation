@@ -176,6 +176,7 @@ const show = ref(false)
     </div>
     <!--  支付抽屉  -->
     <cp-pay-sheet
+      pay-callback="/room"
       :actual-payment="item.actualPayment"
       :order-id="item.id"
       v-model:show="show"

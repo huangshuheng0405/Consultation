@@ -3,11 +3,13 @@
 import { onMounted, ref } from 'vue'
 import { AddressItem, OrderPre } from '@/types/order.js'
 import {
+  createMedicalOrderAPI,
   getAddressListAPI,
   getMedicalOrderPreviewAPI
 } from '@/services/order.js'
 import { useRoute } from 'vue-router'
 import { maskMobile } from '@/utils/filter.js'
+import { showToast } from 'vant'
 
 const route = useRoute()
 // 预支付信息
@@ -33,6 +35,37 @@ onMounted(() => {
   loadOrderPre()
   loadAddressList()
 })
+// 创建订单
+const show = ref(false)
+const agree = ref(false)
+const loading = ref(false)
+const orderId = ref('')
+const onSubmit = async () => {
+  if (!agree.value) return showToast('请先阅读并同意协议')
+  if (!address.value?.id) return showToast('请选择收货地址')
+  if (!orderPre.value?.id) return showToast('请选择处方')
+  if (!orderId.value) {
+    try {
+      loading.value = true
+      const res = await createMedicalOrderAPI({
+        addressId: address.value.id,
+        id: orderPre.value.id,
+        couponId: orderPre.value.couponId
+      })
+      loading.value = false
+      orderId.value = res.data.id
+      showToast('支付成功')
+      // 打开支付抽屉
+      show.value = true
+    } catch (error) {
+      console.log(error)
+      loading.value = false
+    }
+  } else {
+    // 打开支付抽屉
+    show.value = true
+  }
+}
 </script>
 
 <template>
@@ -88,14 +121,26 @@ onMounted(() => {
         由于药品的特殊性，如非错发、漏发药品的情况，药品一经发出
         不得退换，请核对药品信息无误后下单。
       </p>
-      <van-checkbox>我已同意<a href="javascript:;">支付协议</a></van-checkbox>
+      <van-checkbox v-model="agree"
+        >我已同意<a href="javascript:;">支付协议</a></van-checkbox
+      >
     </div>
     <van-submit-bar
       :price="orderPre.actualPayment * 100"
       button-text="立即支付"
       button-type="primary"
       text-align="left"
+      @click="onSubmit"
+      :loading="loading"
     ></van-submit-bar>
+    <!--  支付抽屉  -->
+    <cp-pay-sheet
+      :order-id="orderId"
+      :actual-payment="orderPre.actualPayment"
+      pay-callback="/order/pay/result"
+      v-model:show="show"
+    >
+    </cp-pay-sheet>
   </div>
   <div class="order-pay-page" v-else>
     <cp-nav-bar title="药品支付" />

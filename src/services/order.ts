@@ -11,3 +11,11 @@ export const getMedicalOrderPreviewAPI = (params: {
 export const getAddressListAPI = () => {
   return request<AddressItem[]>('/patient/order/address', 'GET')
 }
+/** 创建订单 */
+export const createMedicalOrderAPI = (data: {
+  id: string
+  addressId: string
+  couponId?: string
+}) => {
+  return request<{ id: string }>('/patient/medicine/order', 'POST', data)
+}
