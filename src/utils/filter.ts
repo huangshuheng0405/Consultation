@@ -9,3 +9,8 @@ export const getIllnessTime = (time: ConsultTime) => {
 export const getConsultFlag = (flag: 1 | 0) => {
   return flagOptions.find((item) => item.value === flag)?.label
 }
+// 手机号脱敏处理（中间4位替换为*）
+export const maskMobile = (mobile: string) => {
+  if (!mobile) return ''
+  return mobile.replace(/^(\d{3})\d{4}(\d{4})$/, '$1****$2')
+}
