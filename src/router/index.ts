@@ -80,6 +80,13 @@ const router = createRouter({
       }
     },
     {
+      path: '/order/pay',
+      component: () => import('@/views/Order/OrderPay.vue'),
+      meta: {
+        title: '药品支付'
+      }
+    },
+    {
       path: '/',
       component: () => import('@/views/Layout/index.vue'),
       redirect: '/home',
