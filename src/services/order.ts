@@ -1,5 +1,5 @@
 import { request } from '@/utils/request.js'
-import { AddressItem, OrderDetail, OrderPre } from '@/types/order.js'
+import { AddressItem, Logistics, OrderDetail, OrderPre } from '@/types/order.js'
 
 /** 获取订单预览信息 */
 export const getMedicalOrderPreviewAPI = (params: {
@@ -22,4 +22,8 @@ export const createMedicalOrderAPI = (data: {
 /** 获取订单详情 */
 export const getOrderDetailAPI = (id: string) => {
   return request<OrderDetail>(`/patient/medicine/order/detail/${id}`)
+}
+/** 获取物流详情 */
+export const getLogisticsDetailAPI = (id: string) => {
+  return request<Logistics>(`/patient/order/${id}/logistics`)
 }

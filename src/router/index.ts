@@ -101,6 +101,13 @@ const router = createRouter({
       }
     },
     {
+      path: '/order/logistics/:id',
+      component: () => import('@/views/Order/OrderLogistics.vue'),
+      meta: {
+        title: '物流详情'
+      }
+    },
+    {
       path: '/',
       component: () => import('@/views/Layout/index.vue'),
       redirect: '/home',
