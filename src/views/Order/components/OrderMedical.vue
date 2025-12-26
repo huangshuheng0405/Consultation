@@ -4,7 +4,6 @@ import { Medical } from '@/types/room.js'
 defineProps<{
   medicines: Medical[]
 }>()
-// TODO 27-6-07
 </script>
 
 <template>

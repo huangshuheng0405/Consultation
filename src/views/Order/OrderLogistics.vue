@@ -3,6 +3,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { onMounted, ref } from 'vue'
 import { Logistics } from '@/types/order.js'
 import { getLogisticsDetailAPI } from '@/services/order.js'
+import AMapLoader from '@amap/amap-jsapi-loader'
 
 const router = useRouter()
 const route = useRoute()
@@ -10,7 +11,28 @@ const logistics = ref<Logistics>()
 onMounted(async () => {
   const res = await getLogisticsDetailAPI(route.query.id as string)
   logistics.value = res.data
+  initMap()
 })
+window._AMapSecurityConfig = {
+  securityJsCode: '415e917da833efcf2d5b69f4d821784b'
+}
+const initMap = () => {
+  AMapLoader.load({
+    key: '4eed3d61125c8b9c168fc22414aaef7e', // 你的高德地图 key
+    version: '2.0',
+    plugins: []
+  })
+    .then((AMap) => {
+      // 地图初始化逻辑
+      const map = new AMap.Map('map', {
+        zoom: 12,
+        center: [116.397428, 39.90923]
+      })
+    })
+    .catch((e) => {
+      console.error(e)
+    })
+}
 </script>
 
 <template>
