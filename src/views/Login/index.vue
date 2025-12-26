@@ -165,38 +165,7 @@ const isShow = ref(false)
 </template>
 
 <style lang="scss" scoped>
-.login {
-  &-page {
-    padding-top: 46px;
-  }
-  &-head {
-    display: flex;
-    padding: 30px 30px 50px;
-    justify-content: space-between;
-    align-items: flex-end;
-    line-height: 1;
-    h3 {
-      font-weight: normal;
-      font-size: 24px;
-    }
-    a {
-      font-size: 15px;
-    }
-  }
-  &-other {
-    margin-top: 60px;
-    padding: 0 30px;
-    .icon {
-      display: flex;
-      justify-content: center;
-      img {
-        width: 36px;
-        height: 36px;
-        padding: 4px;
-      }
-    }
-  }
-}
+@import '@/styles/login.scss';
 .van-form {
   padding: 0 14px;
   .cp-cell {

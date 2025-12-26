@@ -72,3 +72,10 @@ export const getPatientDetailAPI = (id: string) => {
 export const getUnReadMessageCountAPI = () => {
   return request<number>('/patient/message/unRead/all')
 }
+/** 三方登录
+ * @param openId 开放平台ID
+ * @returns {code: number, msg: string, data: User}
+ */
+export const loginByQQAPI = (openId: string) => {
+  return request<User>('/login/thirdparty', 'post', { openId, source: 'qq' })
+}
