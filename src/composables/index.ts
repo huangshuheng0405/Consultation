@@ -1,13 +1,15 @@
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { ConsultOrderItem, FollowType } from '@/types/consult.js'
 import {
   cancelConsultOrderAPI,
+  deleteConsultOrderAPI,
   followOrUnfollowAPI,
   getPrescriptionAPI
 } from '@/services/consult.js'
 import { showFailToast, showImagePreview, showSuccessToast } from 'vant'
 import { OrderType } from '@/enum/index.js'
-import { deleteConsultOrderAPI } from '@/services/consult.js'
+import { OrderDetail } from '@/types/order.js'
+import { getOrderDetailAPI } from '@/services/order.js'
 
 // 关注
 export const useFollow = (type: FollowType = 'doc') => {
@@ -74,4 +76,19 @@ export const useDeleteOrder = (callback: () => void) => {
     }
   }
   return { loading, deleteOrder }
+}
+// 获取订单详情
+export const useOrderDetail = (id: string) => {
+  const order = ref<OrderDetail>()
+  const loading = ref(false)
+  onMounted(async () => {
+    try {
+      loading.value = true
+      const res = await getOrderDetailAPI(id)
+      order.value = res.data
+    } finally {
+      loading.value = false
+    }
+  })
+  return { order, loading }
 }

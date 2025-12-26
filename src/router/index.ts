@@ -94,6 +94,13 @@ const router = createRouter({
       }
     },
     {
+      path: '/order/:id',
+      component: () => import('@/views/Order/OrderDetail.vue'),
+      meta: {
+        title: '药品订单详情'
+      }
+    },
+    {
       path: '/',
       component: () => import('@/views/Layout/index.vue'),
       redirect: '/home',
