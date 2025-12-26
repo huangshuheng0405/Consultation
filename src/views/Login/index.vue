@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { codeRules, mobileRules } from '@/utils/rules'
-import { passwordRules } from '@/utils/rules'
+import { codeRules, mobileRules } from '@/utils/rules.js'
+import { passwordRules } from '@/utils/rules.js'
 import { useRoute, useRouter } from 'vue-router'
 import { onUnmounted, ref } from 'vue'
 import { FormInstance, showSuccessToast, showToast } from 'vant'
@@ -9,7 +9,7 @@ import {
   loginByPasswordAPI,
   sendMobileCodeAPI
 } from '@/services/user.js'
-import { useUserStore } from '@/stores'
+import { useUserStore } from '@/stores/index.js'
 
 const router = useRouter()
 
@@ -154,9 +154,12 @@ const isShow = ref(false)
     <!-- 底部 -->
     <div class="login-other">
       <van-divider>第三方登录</van-divider>
-      <div class="icon">
+      <a
+        class="icon"
+        href="https://graph.qq.com/oauth2.0/authorize?client_id=102015968&amp;response_type=token&amp;scope=all&amp;redirect_uri=http%3A%2F%2Fconsult-patients.itheima.net%2Flogin%2Fcallback"
+      >
         <img src="@/assets/qq.svg" alt="" />
-      </div>
+      </a>
     </div>
   </div>
 </template>
