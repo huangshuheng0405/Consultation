@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router'
 import { onMounted, ref } from 'vue'
-import { Logistics } from '@/types/order.js'
+import { Location, Logistics } from '@/types/order.js'
 import { getLogisticsDetailAPI } from '@/services/order.js'
 import AMapLoader from '@amap/amap-jsapi-loader'
+import startImg from '@/assets/start.png'
+import endImg from '@/assets/end.png'
+import carImg from '@/assets/car.png'
 
 const router = useRouter()
 const route = useRoute()
@@ -40,13 +43,48 @@ const initMap = () => {
           logistics.value.logisticsInfo.length >= 2
         ) {
           const list = [...logistics.value.logisticsInfo]
+          // 标记函数
+          const getMarker = (
+            point: Location,
+            image: string,
+            width = 25,
+            height = 30
+          ) => {
+            // 设置大小
+            const icon = new AMap.Icon({
+              size: new AMap.Size(width, height),
+              image: image,
+              imageSize: new AMap.Size(width, height)
+            })
+            const marker = new AMap.Marker({
+              icon: icon,
+              position: [point?.longitude, point?.latitude],
+              offset: new AMap.Pixel(-width / 2, -height)
+            })
+            return marker
+          }
+          // 起点
           const start = list.shift()
+          // 终点
           const end = list.pop()
+          const startMarker = getMarker(start!, startImg)
+          const endMarker = getMarker(end!, endImg)
+          map.add(startMarker, endMarker)
           driving.search(
             [start?.longitude, start?.latitude],
             [end?.longitude, end?.latitude],
             { waypoints: list.map((item) => [item.longitude, item.latitude]) },
-            () => {}
+            () => {
+              // 当前位置
+              const curr = logistics.value?.currentLocationInfo
+              const currMarker = getMarker(curr!, carImg, 23, 20)
+              map.add(currMarker)
+              // 3s后定位当前位置进行缩放
+              setTimeout(() => {
+                map.setZoom(10)
+                map.setFitView([currMarker])
+              }, 3000)
+            }
           )
         }
       })
