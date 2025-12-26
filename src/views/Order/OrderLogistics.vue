@@ -28,6 +28,28 @@ const initMap = () => {
         zoom: 12,
         center: [116.397428, 39.90923]
       })
+      AMap.plugins(['AMap.Driving'], function () {
+        const driving = new AMap.Driving({
+          map: map,
+          showTraffic: false,
+          hideMarkers: true
+        })
+        console.log(logistics.value?.logisticsInfo)
+        if (
+          logistics.value?.logisticsInfo &&
+          logistics.value.logisticsInfo.length >= 2
+        ) {
+          const list = [...logistics.value.logisticsInfo]
+          const start = list.shift()
+          const end = list.pop()
+          driving.search(
+            [start?.longitude, start?.latitude],
+            [end?.longitude, end?.latitude],
+            { waypoints: list.map((item) => [item.longitude, item.latitude]) },
+            () => {}
+          )
+        }
+      })
     })
     .catch((e) => {
       console.error(e)
