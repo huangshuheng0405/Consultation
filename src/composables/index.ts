@@ -1,4 +1,4 @@
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, Ref, ref } from 'vue'
 import { ConsultOrderItem, FollowType } from '@/types/consult.js'
 import {
   cancelConsultOrderAPI,
@@ -6,10 +6,18 @@ import {
   followOrUnfollowAPI,
   getPrescriptionAPI
 } from '@/services/consult.js'
-import { showFailToast, showImagePreview, showSuccessToast } from 'vant'
+import {
+  FormInstance,
+  showFailToast,
+  showImagePreview,
+  showSuccessToast,
+  showToast
+} from 'vant'
 import { OrderType } from '@/enum/index.js'
 import { OrderDetail } from '@/types/order.js'
 import { getOrderDetailAPI } from '@/services/order.js'
+import { sendMobileCodeAPI } from '@/services/user.js'
+import { CodeType } from '@/types/user.js'
 
 // 关注
 export const useFollow = (type: FollowType = 'doc') => {
@@ -91,4 +99,39 @@ export const useOrderDetail = (id: string) => {
     }
   })
   return { order, loading }
+}
+export const useMobileCode = (
+  mobile: Ref<string>,
+  type: CodeType = 'login'
+) => {
+  // 发送验证码
+  const time = ref(0)
+  let timer: number
+  const form = ref<FormInstance>()
+  const onSendCode = async () => {
+    // 获取验证码
+    if (time.value > 0) {
+      return showToast('请稍后再试')
+    }
+    await form.value?.validate('mobile')
+    await sendMobileCodeAPI(mobile.value, type)
+    showToast('验证码已发送')
+    time.value = 60
+    // 开始倒计时
+    if (!timer) {
+      clearInterval(timer)
+    }
+    timer = setInterval(() => {
+      time.value--
+      // 倒计时结束 关闭定时器
+      if (time.value <= 0) {
+        clearInterval(timer)
+      }
+    }, 1000)
+  }
+
+  onUnmounted(() => {
+    clearInterval(timer)
+  })
+  return { time, onSendCode, form }
 }

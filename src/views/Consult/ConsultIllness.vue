@@ -8,7 +8,7 @@ import {
   UploaderFileListItem
 } from 'vant'
 import { uploadImageAPI } from '@/services/consult.js'
-import { useConsultStore } from '@/stores'
+import { useConsultStore } from '@/stores/index.js'
 import { useRouter } from 'vue-router'
 import { flagOptions, timeOptions } from '@/services/constants.js'
 

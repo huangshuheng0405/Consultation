@@ -1,15 +1,11 @@
 <script setup lang="ts">
-import { codeRules, mobileRules } from '@/utils/rules.js'
-import { passwordRules } from '@/utils/rules.js'
-import { useRoute, useRouter } from 'vue-router'
-import { onUnmounted, ref } from 'vue'
-import { FormInstance, showSuccessToast, showToast } from 'vant'
-import {
-  loginByMobileAPI,
-  loginByPasswordAPI,
-  sendMobileCodeAPI
-} from '@/services/user.js'
+import { useMobileCode } from '@/composables/index.js'
+import { loginByMobileAPI, loginByPasswordAPI } from '@/services/user.js'
 import { useUserStore } from '@/stores/index.js'
+import { codeRules, mobileRules, passwordRules } from '@/utils/rules.js'
+import { showSuccessToast, showToast } from 'vant'
+import { ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 const router = useRouter()
 
@@ -46,36 +42,8 @@ const onSubmit = async () => {
 // 短信登录界面切换
 const isPassword = ref(true) // 默认密码登录模式，如果为false则切换为短信登录模式，如果为true则切换为密码登录模式
 const code = ref('')
-
 // 发送验证码
-const time = ref(0)
-let timer: number
-const form = ref<FormInstance>()
-const onSendCode = async () => {
-  // 获取验证码
-  if (time.value > 0) {
-    return showToast('请稍后再试')
-  }
-  await form.value?.validate('mobile')
-  await sendMobileCodeAPI(mobile.value, 'login')
-  showToast('验证码已发送')
-  time.value = 60
-  // 开始倒计时
-  if (!timer) {
-    clearInterval(timer)
-  }
-  timer = setInterval(() => {
-    time.value--
-    // 倒计时结束 关闭定时器
-    if (time.value <= 0) {
-      clearInterval(timer)
-    }
-  }, 1000)
-}
-
-onUnmounted(() => {
-  clearInterval(timer)
-})
+const { time, onSendCode, form } = useMobileCode(mobile, 'login')
 
 // 控制密码可见与不可见
 const isShow = ref(false)
@@ -129,8 +97,8 @@ const isShow = ref(false)
             class="btn-send"
             :class="{ active: time > 0 }"
             @click="onSendCode"
-            >{{ time > 0 ? `${time}s后再次发送` : '发送验证码' }}</span
-          >
+            >{{ time > 0 ? `${time}s后再次发送` : '发送验证码' }}
+          </span>
         </template>
       </van-field>
       <div class="cp-cell">

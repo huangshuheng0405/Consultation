@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { getUserInfoAPI } from '@/services/user'
-import { UserInfo } from '@/types/user'
+import { getUserInfoAPI } from '@/services/user.js'
+import { UserInfo } from '@/types/user.js'
 import { showConfirmDialog } from 'vant'
 import { onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/index.js'

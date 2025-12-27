@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getConsultOrderUrlAPI } from '@/services/consult'
+import { getConsultOrderUrlAPI } from '@/services/consult.js'
 import { showLoadingToast, showToast } from 'vant'
 import { ref } from 'vue'
 

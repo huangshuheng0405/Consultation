@@ -6,7 +6,7 @@ import {
   useCancelOrder,
   useDeleteOrder,
   useShowPrescription
-} from '@/composables'
+} from '@/composables/index.js'
 import ConsultMore from '@/views/User/components/ConsultMore.vue'
 
 const router = useRouter()

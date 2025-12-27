@@ -157,7 +157,7 @@ router.beforeEach((to) => {
   NProgress.start() // 开启进度条
   const userStore = useUserStore()
   // 白名单，不需要登录即可访问的页面
-  const whiteList = ['/login', 'login/callback']
+  const whiteList = ['/login', '/login/callback']
   // 如果未登录且不在白名单中，则跳转到登录页面
   if (!userStore.user?.token && !whiteList.includes(to.path)) {
     return '/login'
