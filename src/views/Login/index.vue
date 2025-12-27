@@ -36,7 +36,7 @@ const onSubmit = async () => {
   }
   // console.log(res)
   showSuccessToast('登录成功')
-  router.replace((route.query.redirect as string) || '/user')
+  router.replace((route.query.returnUrl as string) || '/user')
 }
 
 // 短信登录界面切换
@@ -123,6 +123,7 @@ const isShow = ref(false)
     <div class="login-other">
       <van-divider>第三方登录</van-divider>
       <a
+        @click="userStore.setReturnUrl(route.query.returnUrl as string)"
         class="icon"
         href="https://graph.qq.com/oauth2.0/authorize?client_id=102015968&amp;response_type=token&amp;scope=all&amp;redirect_uri=http%3A%2F%2Fconsult-patients.itheima.net%2Flogin%2Fcallback"
       >

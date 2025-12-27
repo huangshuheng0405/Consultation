@@ -79,3 +79,11 @@ export const getUnReadMessageCountAPI = () => {
 export const loginByQQAPI = (openId: string) => {
   return request<User>('/login/thirdparty', 'post', { openId, source: 'qq' })
 }
+/** 绑定手机号 */
+export const bindMobileAPI = (data: {
+  mobile: string
+  code: string
+  openId: string
+}) => {
+  return request<User>('/login/bind', 'post', data)
+}

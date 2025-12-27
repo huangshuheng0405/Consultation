@@ -15,9 +15,16 @@ export const useUserStore = defineStore(
       user.value = undefined
     }
 
+    const returnUrl = ref('')
+    const setReturnUrl = (url: string) => {
+      returnUrl.value = url
+    }
+
     return {
       user,
       setUser,
+      setReturnUrl,
+      returnUrl,
       removeUser
     }
   },

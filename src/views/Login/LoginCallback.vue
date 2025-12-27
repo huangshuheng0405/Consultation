@@ -1,20 +1,25 @@
 <script setup lang="ts">
 import { useMobileCode } from '@/composables/index.js'
-import { loginByQQAPI } from '@/services/user.js'
+import { bindMobileAPI, loginByQQAPI } from '@/services/user.js'
+import { useUserStore } from '@/stores/index.js'
+import { User } from '@/types/user.js'
 import { codeRules } from '@/utils/rules.js'
 import { mobileRules } from '@/utils/rules.js'
+import { showSuccessToast } from 'vant'
 import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-const id = ref('')
+const openId = ref('')
 const isNeedBind = ref(true)
 onMounted(() => {
   if (QC.Login.check()) {
-    QC.Login.getMe((openId: string) => {
-      id.value = openId
-      console.log(openId)
-      loginByQQAPI(openId)
+    QC.Login.getMe((id: string) => {
+      openId.value = id
+      console.log(openId.value)
+      loginByQQAPI(id)
         .then((res) => {
           console.log(res)
+          loginSuccess(res.data)
         })
         .catch((err) => {
           console.log(err)
@@ -26,6 +31,24 @@ onMounted(() => {
 const mobile = ref('')
 const code = ref()
 const { onSendCode, time, form } = useMobileCode(mobile, 'bindMobile')
+// 成功的逻辑
+const userStore = useUserStore()
+const router = useRouter()
+const loginSuccess = (data: User) => {
+  userStore.setUser(data)
+  router.replace(userStore.returnUrl || '/user')
+  showSuccessToast('登录成功')
+  userStore.setReturnUrl('')
+}
+// 绑定手机
+const onSubmit = async () => {
+  const res = await bindMobileAPI({
+    mobile: mobile.value,
+    code: code.value,
+    openId: openId.value
+  })
+  loginSuccess(res.data)
+}
 </script>
 
 <template>
