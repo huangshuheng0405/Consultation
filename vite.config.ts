@@ -11,6 +11,7 @@ import { VantResolver } from 'unplugin-vue-components/resolvers'
 
 // svg插件
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import { viteMockServe } from 'vite-plugin-mock'
 import path from 'path'
 
 import { createHtmlPlugin } from 'vite-plugin-html'
@@ -22,6 +23,12 @@ export default defineConfig({
     host: true
   },
   plugins: [
+    viteMockServe({
+      // 在哪个文件夹下编写模拟接口的代码
+      mockPath: './src/mock',
+      // 在开发环境开启mock
+      enable: true
+    }),
     vue(),
     createHtmlPlugin(),
     vueJsx(),
