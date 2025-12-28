@@ -50,8 +50,8 @@ const buy = (prescription: Prescription) => {
         {{ item.msg.consultRecord?.patientInfo.age }}
       </p>
       <p>
-        {{ getIllnessTime(item.msg.consultRecord?.illnessTime) }} |
-        {{ getConsultFlag(item.msg.consultRecord?.consultFlag) }}
+        {{ getIllnessTime(item.msg.consultRecord?.illnessTime!) }} |
+        {{ getConsultFlag(item.msg.consultRecord?.consultFlag!) }}
       </p>
       <div>111</div>
     </div>

@@ -47,6 +47,10 @@ const { time, onSendCode, form } = useMobileCode(mobile, 'login')
 
 // 控制密码可见与不可见
 const isShow = ref(false)
+
+const url =
+  'https://graph.qq.com/oauth2.0/authorize?client_id=102015968&amp;response_type=token&amp;scope=all&amp;redirect_uri=' +
+  encodeURIComponent(import.meta.env.VITE_APP_CALLBACK + '/login/callback')
 </script>
 
 <template>
@@ -125,7 +129,7 @@ const isShow = ref(false)
       <a
         @click="userStore.setReturnUrl(route.query.returnUrl as string)"
         class="icon"
-        href="https://graph.qq.com/oauth2.0/authorize?client_id=102015968&amp;response_type=token&amp;scope=all&amp;redirect_uri=http%3A%2F%2Fconsult-patients.itheima.net%2Flogin%2Fcallback"
+        :href="url"
       >
         <img src="@/assets/qq.svg" alt="" />
       </a>
@@ -134,7 +138,7 @@ const isShow = ref(false)
 </template>
 
 <style lang="scss" scoped>
-@import '@/styles/login.scss';
+@import '../../styles/login.scss';
 .van-form {
   padding: 0 14px;
   .cp-cell {

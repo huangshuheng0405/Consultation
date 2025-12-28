@@ -14,3 +14,5 @@ app.use(pinia)
 app.use(router)
 
 app.mount('#app')
+
+console.log(import.meta.env.VITE_APP_CALLBACK)

@@ -13,6 +13,8 @@ import { VantResolver } from 'unplugin-vue-components/resolvers'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import path from 'path'
 
+import { createHtmlPlugin } from 'vite-plugin-html'
+
 // https://vite.dev/config/
 export default defineConfig({
   server: {
@@ -21,6 +23,7 @@ export default defineConfig({
   },
   plugins: [
     vue(),
+    createHtmlPlugin(),
     vueJsx(),
     vueDevTools(),
     Components({
