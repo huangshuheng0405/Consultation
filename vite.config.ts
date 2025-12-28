@@ -1,3 +1,5 @@
+/// <reference types="vitest/config" />
+
 import { fileURLToPath, URL } from 'node:url'
 
 import { defineConfig } from 'vite'
@@ -21,6 +23,10 @@ export default defineConfig({
   server: {
     port: 80,
     host: true
+  },
+  test: {
+    globals: true,
+    environment: 'happy-dom'
   },
   plugins: [
     viteMockServe({
