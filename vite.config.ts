@@ -19,7 +19,7 @@ import path from 'path'
 import { createHtmlPlugin } from 'vite-plugin-html'
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   server: {
     port: 80,
     host: true
@@ -36,7 +36,18 @@ export default defineConfig({
       enable: true
     }),
     vue(),
-    createHtmlPlugin(),
+    createHtmlPlugin({
+      inject: {
+        data: {
+          DEV: mode === 'development',
+          VITE_APP_TITLE: mode === 'development' ? '优医问诊-dev' : '优医问诊',
+          VITE_APP_CALLBACK:
+            mode === 'development'
+              ? 'http://localhost:80'
+              : 'https://cp.itheima.net'
+        }
+      }
+    }),
     vueJsx(),
     vueDevTools(),
     Components({
@@ -57,4 +68,4 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   }
-})
+}))

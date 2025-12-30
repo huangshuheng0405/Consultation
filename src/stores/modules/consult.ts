@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ConsultIllness, PartialConsult } from '@/types/consult.js'
+import { ConsultIllness, PartialConsult } from '@/types/consult'
 import { ref } from 'vue'
 import { ConsultType } from '@/enum/index.js'
 
